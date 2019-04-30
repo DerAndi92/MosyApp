@@ -6,17 +6,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
-import "pages/widget.dart";
-
-void main() {
-  runApp(new FlutterBlueApp());
-}
+import 'widget.dart';
+import '../start.dart';
 
 class FlutterBlueApp extends StatefulWidget {
-  FlutterBlueApp({Key key, this.title}) : super(key: key);
-
-  final String title;
-
   @override
   _FlutterBlueAppState createState() => new _FlutterBlueAppState();
 }
@@ -74,15 +67,11 @@ class _FlutterBlueAppState extends State<FlutterBlueApp> {
     _scanSubscription = _flutterBlue
         .scan(
       timeout: const Duration(seconds: 5),
-      /*withServices: [
-          new Guid('0000180F-0000-1000-8000-00805F9B34FB')
-        ]*/
+      // withServices: [
+      //   new Guid('0000180F-0000-1000-8000-00805F9B34FB')
+      // ]
     )
         .listen((scanResult) {
-      print('localName: ${scanResult.advertisementData.localName}');
-      print(
-          'manufacturerData: ${scanResult.advertisementData.manufacturerData}');
-      print('serviceData: ${scanResult.advertisementData.serviceData}');
       setState(() {
         scanResults[scanResult.device.id] = scanResult;
       });
@@ -146,56 +135,6 @@ class _FlutterBlueAppState extends State<FlutterBlueApp> {
     });
   }
 
-  _readCharacteristic(BluetoothCharacteristic c) async {
-    await device.readCharacteristic(c);
-    setState(() {});
-  }
-
-  _writeCharacteristic(BluetoothCharacteristic c) async {
-    c.value = [0x01, 0x02];
-    await device.writeCharacteristic(c, [0x12, 0x34],
-        type: CharacteristicWriteType.withResponse);
-    setState(() {});
-  }
-
-  _readDescriptor(BluetoothDescriptor d) async {
-    await device.readDescriptor(d);
-    setState(() {});
-  }
-
-  _writeDescriptor(BluetoothDescriptor d) async {
-    await device.writeDescriptor(d, [0x12, 0x34]);
-    setState(() {});
-  }
-
-  _setNotification(BluetoothCharacteristic c) async {
-    if (c.isNotifying) {
-      await device.setNotifyValue(c, false);
-      // Cancel subscription
-      valueChangedSubscriptions[c.uuid]?.cancel();
-      valueChangedSubscriptions.remove(c.uuid);
-    } else {
-      await device.setNotifyValue(c, true);
-      // ignore: cancel_subscriptions
-      final sub = device.onValueChanged(c).listen((d) {
-        setState(() {
-          print('onValueChanged $d');
-        });
-      });
-      // Add to map
-      valueChangedSubscriptions[c.uuid] = sub;
-    }
-    setState(() {});
-  }
-
-  _refreshDeviceState(BluetoothDevice d) async {
-    var state = await d.state;
-    setState(() {
-      deviceState = state;
-      print('State refreshed: $deviceState');
-    });
-  }
-
   _buildScanningButton() {
     if (isConnected || state != BluetoothState.on) {
       return null;
@@ -221,47 +160,6 @@ class _FlutterBlueAppState extends State<FlutterBlueApp> {
         .toList();
   }
 
-  List<Widget> _buildServiceTiles() {
-    return services
-        .map(
-          (s) => new ServiceTile(
-                service: s,
-                characteristicTiles: s.characteristics
-                    .map(
-                      (c) => new CharacteristicTile(
-                            characteristic: c,
-                            onReadPressed: () => _readCharacteristic(c),
-                            onWritePressed: () => _writeCharacteristic(c),
-                            onNotificationPressed: () => _setNotification(c),
-                            descriptorTiles: c.descriptors
-                                .map(
-                                  (d) => new DescriptorTile(
-                                        descriptor: d,
-                                        onReadPressed: () => _readDescriptor(d),
-                                        onWritePressed: () =>
-                                            _writeDescriptor(d),
-                                      ),
-                                )
-                                .toList(),
-                          ),
-                    )
-                    .toList(),
-              ),
-        )
-        .toList();
-  }
-
-  _buildActionButtons() {
-    if (isConnected) {
-      return <Widget>[
-        new IconButton(
-          icon: const Icon(Icons.cancel),
-          onPressed: () => _disconnect(),
-        )
-      ];
-    }
-  }
-
   _buildAlertTile() {
     return new Container(
       color: Colors.redAccent,
@@ -278,18 +176,11 @@ class _FlutterBlueAppState extends State<FlutterBlueApp> {
     );
   }
 
-  _buildDeviceStateTile() {
-    return new ListTile(
-        leading: (deviceState == BluetoothDeviceState.connected)
-            ? const Icon(Icons.bluetooth_connected)
-            : const Icon(Icons.bluetooth_disabled),
-        title: new Text('Device is ${deviceState.toString().split('.')[1]}.'),
-        subtitle: new Text('${device.id}'),
-        trailing: new IconButton(
-          icon: const Icon(Icons.refresh),
-          onPressed: () => _refreshDeviceState(device),
-          color: Theme.of(context).iconTheme.color.withOpacity(0.5),
-        ));
+  _goToStart() {
+    Navigator.push<bool>(
+      context,
+      MaterialPageRoute(builder: (BuildContext context) => StartPage()),
+    );
   }
 
   _buildProgressBarTile() {
@@ -303,24 +194,20 @@ class _FlutterBlueAppState extends State<FlutterBlueApp> {
       tiles.add(_buildAlertTile());
     }
     if (isConnected) {
-      tiles.add(_buildDeviceStateTile());
-      tiles.addAll(_buildServiceTiles());
+      // jetzt bitte umändern auf gotoooo
     } else {
       tiles.addAll(_buildScanResultTiles());
     }
     return new MaterialApp(
       home: new Scaffold(
-        appBar: new AppBar(
-          title: const Text('FlutterBlue'),
-          actions: _buildActionButtons(),
-        ),
         floatingActionButton: _buildScanningButton(),
         body: new Stack(
           children: <Widget>[
             (isScanning) ? _buildProgressBarTile() : new Container(),
             new ListView(
               children: tiles,
-            )
+            ),
+            new RaisedButton(onPressed: _goToStart(), child: Text('Los gehts!'))
           ],
         ),
       ),
