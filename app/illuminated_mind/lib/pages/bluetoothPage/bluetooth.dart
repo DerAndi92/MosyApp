@@ -6,15 +6,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
-import 'widget.dart';
-import '../start.dart';
+import 'bluetoothWidgets.dart';
 
-class FlutterBlueApp extends StatefulWidget {
+class BluetoothPage extends StatefulWidget {
   @override
-  _FlutterBlueAppState createState() => new _FlutterBlueAppState();
+  _BluetoothState createState() => new _BluetoothState();
 }
 
-class _FlutterBlueAppState extends State<FlutterBlueApp> {
+class _BluetoothState extends State<BluetoothPage> {
   FlutterBlue _flutterBlue = FlutterBlue.instance;
 
   /// Scanning
@@ -65,12 +64,7 @@ class _FlutterBlueAppState extends State<FlutterBlueApp> {
 
   _startScan() {
     _scanSubscription = _flutterBlue
-        .scan(
-      timeout: const Duration(seconds: 5),
-      // withServices: [
-      //   new Guid('0000180F-0000-1000-8000-00805F9B34FB')
-      // ]
-    )
+        .scan(timeout: const Duration(seconds: 5))
         .listen((scanResult) {
       setState(() {
         scanResults[scanResult.device.id] = scanResult;
@@ -140,14 +134,13 @@ class _FlutterBlueAppState extends State<FlutterBlueApp> {
       return null;
     }
     if (isScanning) {
-      return new FloatingActionButton(
-        child: new Icon(Icons.stop),
+      return FloatingActionButton(
+        child: Icon(Icons.stop),
         onPressed: _stopScan,
-        backgroundColor: Colors.red,
       );
     } else {
-      return new FloatingActionButton(
-          child: new Icon(Icons.search), onPressed: _startScan);
+      return FloatingActionButton(
+          child: Icon(Icons.search), onPressed: _startScan);
     }
   }
 
@@ -160,56 +153,29 @@ class _FlutterBlueAppState extends State<FlutterBlueApp> {
         .toList();
   }
 
-  _buildAlertTile() {
-    return new Container(
-      color: Colors.redAccent,
-      child: new ListTile(
-        title: new Text(
-          'Bluetooth adapter is ${state.toString().substring(15)}',
-          style: Theme.of(context).primaryTextTheme.subhead,
-        ),
-        trailing: new Icon(
-          Icons.error,
-          color: Theme.of(context).primaryTextTheme.subhead.color,
-        ),
-      ),
-    );
-  }
-
-  _goToStart() {
-    Navigator.push<bool>(
-      context,
-      MaterialPageRoute(builder: (BuildContext context) => StartPage()),
-    );
-  }
-
   _buildProgressBarTile() {
     return new LinearProgressIndicator();
   }
 
   @override
   Widget build(BuildContext context) {
-    var tiles = new List<Widget>();
+    var tiles = List<Widget>();
     if (state != BluetoothState.on) {
-      tiles.add(_buildAlertTile());
+      tiles.add(AlertTile(state));
     }
-    if (isConnected) {
-      // jetzt bitte umändern auf gotoooo
-    } else {
-      tiles.addAll(_buildScanResultTiles());
-    }
-    return new MaterialApp(
-      home: new Scaffold(
-        floatingActionButton: _buildScanningButton(),
-        body: new Stack(
-          children: <Widget>[
-            (isScanning) ? _buildProgressBarTile() : new Container(),
-            new ListView(
-              children: tiles,
-            ),
-            new RaisedButton(onPressed: _goToStart(), child: Text('Los gehts!'))
-          ],
-        ),
+    if (!isConnected) tiles.addAll(_buildScanResultTiles());
+
+    return Scaffold(
+      floatingActionButton: _buildScanningButton(),
+      body: Stack(
+        children: <Widget>[
+          (isScanning) ? _buildProgressBarTile() : Container(),
+          (isConnected)
+              ? ConnectionTile(deviceState)
+              : ListView(
+                  children: tiles,
+                ),
+        ],
       ),
     );
   }

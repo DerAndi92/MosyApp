@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'runes.dart';
-import 'speechBubble.dart';
+import '../runesPage/runes.dart';
+import 'startWidgets.dart';
 
 class StartPage extends StatefulWidget {
   _StartState createState() => _StartState();
