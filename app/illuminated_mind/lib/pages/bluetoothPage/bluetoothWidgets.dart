@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
-import '../startPage/start.dart';
+import 'package:illuminated_mind/pages/startPage/start.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:illuminated_mind/models/QuestModel.dart';
 
 class AlertTile extends StatelessWidget {
   final BluetoothState state;
@@ -26,26 +28,36 @@ class AlertTile extends StatelessWidget {
 
 class ConnectionTile extends StatelessWidget {
   final BluetoothDeviceState deviceState;
-  final VoidCallback onTap;
 
-  ConnectionTile(this.deviceState, {this.onTap});
+  ConnectionTile(this.deviceState);
+  _goToStart(BuildContext context) {
+    Navigator.push<bool>(
+      context,
+      MaterialPageRoute(builder: (BuildContext context) => StartPage()),
+    );
+  }
 
-  _buildTile(BuildContext context) {
+  _buildTile(BuildContext context, QuestModel model) {
     bool isDeviceConnected = (deviceState == BluetoothDeviceState.connected);
     return isDeviceConnected
         ? <Widget>[
             Padding(
                 child: Text("Die Verbindung wurde erfolgreich aufgebaut!"),
                 padding: EdgeInsets.all(30)),
-            RaisedButton(
-                child: Text("Spiel starten"),
-                onPressed: () => {
-                      Navigator.push<bool>(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) => StartPage()),
-                      ),
-                    }),
+            Text("Der Lösungscode ist:"),
+            Text(model.finalSolutionString),
+            Padding(
+              child: RaisedButton(
+                onPressed: () => model.generateSolution(),
+                child: Text("Code generieren"),
+              ),
+              padding: EdgeInsets.all(30),
+            ),
+            (!(model.finalSolution.length == 0))
+                ? RaisedButton(
+                    child: Text("Spiel starten"),
+                    onPressed: () => _goToStart(context))
+                : Container(),
           ]
         : <Widget>[
             Padding(
@@ -58,12 +70,14 @@ class ConnectionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Container(
-      alignment: Alignment(0.0, 0.0),
-      child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: _buildTile(context)),
+    return ScopedModelDescendant<QuestModel>(
+      builder: (context, child, model) => Container(
+            alignment: Alignment(0.0, 0.0),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: _buildTile(context, model)),
+          ),
     );
   }
 }

@@ -6,7 +6,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
-import 'bluetoothWidgets.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:illuminated_mind/models/BluetoothModel.dart';
+import 'package:illuminated_mind/pages/bluetoothPage/bluetoothWidgets.dart';
 
 class BluetoothPage extends StatefulWidget {
   @override
@@ -26,11 +28,10 @@ class _BluetoothState extends State<BluetoothPage> {
   BluetoothState state = BluetoothState.unknown;
 
   /// Device
-  BluetoothDevice device;
-  bool get isConnected => (device != null);
+  BluetoothDevice _device;
+  bool get isConnected => (_device != null);
   StreamSubscription deviceConnection;
   StreamSubscription deviceStateSubscription;
-  List<BluetoothService> services = new List();
   Map<Guid, StreamSubscription> valueChangedSubscriptions = {};
   BluetoothDeviceState deviceState = BluetoothDeviceState.disconnected;
 
@@ -84,36 +85,44 @@ class _BluetoothState extends State<BluetoothPage> {
     });
   }
 
-  _connect(BluetoothDevice d) async {
-    device = d;
+  _connect(BluetoothDevice d, AbstractBluetoothModel model) async {
+    _device = d;
+    model.setDevice(d);
     // Connect to device
     deviceConnection = _flutterBlue
-        .connect(device, timeout: const Duration(seconds: 4))
+        .connect(_device, timeout: const Duration(seconds: 4))
         .listen(
           null,
           onDone: _disconnect,
         );
-
     // Update the connection state immediately
-    device.state.then((s) {
+    _device.state.then((s) {
       setState(() {
         deviceState = s;
       });
     });
 
     // Subscribe to connection changes
-    deviceStateSubscription = device.onStateChanged().listen((s) {
+    deviceStateSubscription = _device.onStateChanged().listen((s) {
       setState(() {
         deviceState = s;
       });
       if (s == BluetoothDeviceState.connected) {
-        device.discoverServices().then((s) {
-          setState(() {
-            services = s;
-          });
+        _device.discoverServices().then((s) {
+          _setModel(s, model);
         });
       }
     });
+  }
+
+  _setModel(List<BluetoothService> s, AbstractBluetoothModel model) {
+    BluetoothService sendingService = s.singleWhere((service) =>
+        service.uuid.toString() == "0000ffe0-0000-1000-8000-00805f9b34fb");
+    BluetoothCharacteristic sendingChar = sendingService.characteristics
+        .singleWhere(
+            (c) => c.uuid.toString() == "0000ffe1-0000-1000-8000-00805f9b34fb");
+    model.setSendingChar(sendingChar);
+    model.setServices(s);
   }
 
   _disconnect() {
@@ -125,11 +134,11 @@ class _BluetoothState extends State<BluetoothPage> {
     deviceConnection?.cancel();
     deviceConnection = null;
     setState(() {
-      device = null;
+      _device = null;
     });
   }
 
-  _buildScanningButton() {
+  _getFloatingButton() {
     if (isConnected || state != BluetoothState.on) {
       return null;
     }
@@ -144,17 +153,18 @@ class _BluetoothState extends State<BluetoothPage> {
     }
   }
 
-  _buildScanResultTiles() {
+  _getScanResultList(List<Widget> tiles, AbstractBluetoothModel model) {
+    if (!isConnected) tiles.addAll(_addScanResultTiles(model));
+    return tiles;
+  }
+
+  _addScanResultTiles(AbstractBluetoothModel model) {
     return scanResults.values
         .map((r) => ScanResultTile(
               result: r,
-              onTap: () => _connect(r.device),
+              onTap: () => _connect(r.device, model),
             ))
         .toList();
-  }
-
-  _buildProgressBarTile() {
-    return new LinearProgressIndicator();
   }
 
   @override
@@ -163,20 +173,19 @@ class _BluetoothState extends State<BluetoothPage> {
     if (state != BluetoothState.on) {
       tiles.add(AlertTile(state));
     }
-    if (!isConnected) tiles.addAll(_buildScanResultTiles());
-
-    return Scaffold(
-      floatingActionButton: _buildScanningButton(),
-      body: Stack(
-        children: <Widget>[
-          (isScanning) ? _buildProgressBarTile() : Container(),
-          (isConnected)
-              ? ConnectionTile(deviceState)
-              : ListView(
-                  children: tiles,
-                ),
-        ],
-      ),
-    );
+    return ScopedModelDescendant<AbstractBluetoothModel>(
+        builder: (context, child, model) => Scaffold(
+              floatingActionButton: _getFloatingButton(),
+              body: Stack(
+                children: <Widget>[
+                  (isScanning) ? LinearProgressIndicator() : Container(),
+                  (isConnected)
+                      ? ConnectionTile(deviceState)
+                      : ListView(
+                          children: _getScanResultList(tiles, model),
+                        ),
+                ],
+              ),
+            ));
   }
 }
