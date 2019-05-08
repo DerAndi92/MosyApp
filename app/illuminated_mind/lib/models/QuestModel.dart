@@ -22,6 +22,8 @@ class QuestModel extends Model {
     print("______________");
     print(interimResult.toString() + " -> Zwischenergebnis ");
     print(_finalSolution.toString() + " -> Endergebnis ");
+        print("______________");
+
     List<int> resultToSend = [];
     finalSolution.asMap().forEach((index, value) =>
         {resultToSend.add(checkValues(value, interimResult[index]))});
