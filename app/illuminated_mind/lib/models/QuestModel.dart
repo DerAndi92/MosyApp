@@ -3,7 +3,6 @@ import 'dart:math';
 
 class QuestModel extends Model {
   List<int> _finalSolution = [];
-  List<int> _interimResult = [];
   int min = 1;
   int max = 9;
 
@@ -17,6 +16,33 @@ class QuestModel extends Model {
 
     notifyListeners();
     print(_finalSolution);
+  }
+
+  List<int> compareResult(List<int> interimResult) {
+    print("______________");
+    print(interimResult.toString() + " -> Zwischenergebnis ");
+    print(_finalSolution.toString() + " -> Endergebnis ");
+    List<int> resultToSend = [];
+    finalSolution.asMap().forEach((index, value) =>
+        {resultToSend.add(checkValues(value, interimResult[index]))});
+    return resultToSend;
+  }
+
+  int checkValues(int solutionValue, int testValue) {
+    if (solutionValue == testValue) {
+      print(solutionValue.toString() + " == " + testValue.toString());
+      return 2;
+    } else if (_finalSolution.contains(testValue)) {
+      print(_finalSolution.toString() + " contains " + testValue.toString());
+
+      return 1;
+    } else {
+      print(_finalSolution.toString() +
+          " doesnt contains  " +
+          testValue.toString());
+
+      return 0;
+    }
   }
 
   List<int> get finalSolution {

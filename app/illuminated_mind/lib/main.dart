@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:illuminated_mind/pages/bluetoothPage/bluetooth.dart';
+//import 'package:illuminated_mind/pages/bluetoothPage/bluetooth.dart';
+import 'package:illuminated_mind/pages/runesPage/runes.dart';
+
 import 'package:illuminated_mind/models/BluetoothModel.dart';
 import 'package:illuminated_mind/models/QuestModel.dart';
 
@@ -40,7 +42,7 @@ class IlluminatedMind extends StatelessWidget {
         model: bluetoothModel,
         child: MaterialApp(
           theme: _themeData,
-          home: BluetoothPage(),
+          home: RunesPage(),
         ),
       ),
     );
