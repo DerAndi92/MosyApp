@@ -1,57 +1,85 @@
 import 'package:scoped_model/scoped_model.dart';
+import 'package:illuminated_mind/utils/Constants.dart';
 import 'dart:math';
 
 class QuestModel extends Model {
-  List<int> _finalSolution = [];
-  int min = 1;
-  int max = 9;
+  List<int> _finalResult = []; // Endergebnis
+  List<int> _interimResult = [0, 0, 0, 0]; // Zwischenergebnis
+  List<int> _evaluatedResult = []; // ausgewertetes Ergebnis
+  int _layer = 0;
 
-  void generateSolution() {
-    _finalSolution = [];
-    var _random = new Random();
-    while (_finalSolution.length < 4) {
-      var randomInt = min + _random.nextInt(max - min);
-      if (!_finalSolution.contains(randomInt)) _finalSolution.add(randomInt);
-    }
-
-    notifyListeners();
-    print(_finalSolution);
+  // ----- layer
+  int get layer {
+    return _layer;
   }
 
-  List<int> compareResult(List<int> interimResult) {
-    print("______________");
-    print(interimResult.toString() + " -> Zwischenergebnis ");
-    print(_finalSolution.toString() + " -> Endergebnis ");
-        print("______________");
-
-    List<int> resultToSend = [];
-    finalSolution.asMap().forEach((index, value) =>
-        {resultToSend.add(checkValues(value, interimResult[index]))});
-    return resultToSend;
-  }
-
-  int checkValues(int solutionValue, int testValue) {
-    if (solutionValue == testValue) {
-      print(solutionValue.toString() + " == " + testValue.toString());
-      return 2;
-    } else if (_finalSolution.contains(testValue)) {
-      print(_finalSolution.toString() + " contains " + testValue.toString());
-
-      return 1;
+  void setNextLayer() {
+    int i = _interimResult.indexOf(0);
+    if (i == -1) {
+      _layer = 4;
     } else {
-      print(_finalSolution.toString() +
-          " doesnt contains  " +
-          testValue.toString());
-
-      return 0;
+      _layer = i;
     }
   }
 
-  List<int> get finalSolution {
-    return _finalSolution;
+  // ----- final result
+  List<int> get finalResult {
+    return _finalResult;
   }
 
-  String get finalSolutionString {
-    return _finalSolution.toString();
+  void generateFinalResult() {
+    _finalResult = [];
+    var _random = new Random();
+    while (_finalResult.length < 4) {
+      var randomInt =
+          Constants.MIN + _random.nextInt(Constants.MAX - Constants.MIN);
+      if (!_finalResult.contains(randomInt)) _finalResult.add(randomInt);
+    }
+    notifyListeners();
+  }
+
+  // ----- interim result
+  List<int> get interimResult {
+    return _interimResult;
+  }
+
+  void replaceValueOfInterimResult(int position, int value) {
+    _interimResult.replaceRange(position, position + 1, [value]);
+    notifyListeners();
+  }
+
+  void generateInterimResult() {
+    for (var i = 0; i < _interimResult.length; i++) {
+      if (_evaluatedResult[i] != 2) _interimResult[i] = 0;
+    }
+  }
+
+  // ----- evalutated result
+  List<int> get evaluatedResult {
+    return _evaluatedResult;
+  }
+
+  void generateEvaluatedResult() {
+    _evaluatedResult = [];
+    finalResult.asMap().forEach((index, finalValue) =>
+        {compareValues(finalValue, _interimResult[index], index)});
+  }
+
+  void compareValues(int finalValue, int interimValue, int index) {
+    if (finalValue == interimValue) {
+      _evaluatedResult.add(Constants.RIGHT);
+    } else if (_finalResult.contains(interimValue)) {
+      _evaluatedResult.add(Constants.EXISTS);
+    } else {
+      _evaluatedResult.add(Constants.WRONG);
+    }
+  }
+
+  // ----- others
+  bool isRuneUsed(int color) {
+    if (_interimResult.contains(color)) {
+      return true;
+    }
+    return false;
   }
 }

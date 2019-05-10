@@ -45,15 +45,15 @@ class ConnectionTile extends StatelessWidget {
                 child: Text("Die Verbindung wurde erfolgreich aufgebaut!"),
                 padding: EdgeInsets.all(30)),
             Text("Der Lösungscode ist:"),
-            Text(model.finalSolutionString),
+            Text(model.finalResult.toString()),
             Padding(
               child: RaisedButton(
-                onPressed: () => model.generateSolution(),
+                onPressed: () => model.generateFinalResult(),
                 child: Text("Code generieren"),
               ),
               padding: EdgeInsets.all(30),
             ),
-            (!(model.finalSolution.length == 0))
+            (!(model.finalResult.length == 0))
                 ? RaisedButton(
                     child: Text("Spiel starten"),
                     onPressed: () => _goToStart(context))
