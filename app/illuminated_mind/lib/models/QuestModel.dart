@@ -6,23 +6,23 @@ class QuestModel extends Model {
   List<int> _finalResult = []; // Endergebnis
   List<int> _interimResult = [0, 0, 0, 0]; // Zwischenergebnis
   List<int> _evaluatedResult = []; // ausgewertetes Ergebnis
-  int _layer = 0;
+  int _runeLayer = 0;
 
-  // ----- layer
-  int get layer {
-    return _layer;
+  // ----- aktuelle Runen-Ebene
+  int get runeLayer {
+    return _runeLayer;
   }
 
   void setNextLayer() {
     int i = _interimResult.indexOf(0);
     if (i == -1) {
-      _layer = 4;
+      _runeLayer = 4;
     } else {
-      _layer = i;
+      _runeLayer = i;
     }
   }
 
-  // ----- final result
+  // ----- Endergebnis
   List<int> get finalResult {
     return _finalResult;
   }
@@ -38,14 +38,9 @@ class QuestModel extends Model {
     notifyListeners();
   }
 
-  // ----- interim result
+  // ----- Zwischenergebnis
   List<int> get interimResult {
     return _interimResult;
-  }
-
-  void replaceValueOfInterimResult(int position, int value) {
-    _interimResult.replaceRange(position, position + 1, [value]);
-    notifyListeners();
   }
 
   void generateInterimResult() {
@@ -54,7 +49,12 @@ class QuestModel extends Model {
     }
   }
 
-  // ----- evalutated result
+  void replaceValueOfInterimResult(int position, int value) {
+    _interimResult.replaceRange(position, position + 1, [value]);
+    notifyListeners();
+  }
+
+  // ----- Ausgewertetes Ergebnis
   List<int> get evaluatedResult {
     return _evaluatedResult;
   }
@@ -75,7 +75,7 @@ class QuestModel extends Model {
     }
   }
 
-  // ----- others
+  // ----- weitere Funktionen
   bool isRuneUsed(int color) {
     if (_interimResult.contains(color)) {
       return true;

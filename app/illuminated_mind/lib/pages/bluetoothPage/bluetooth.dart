@@ -118,11 +118,12 @@ class _BluetoothState extends State<BluetoothPage> {
   _setModel(List<BluetoothService> s, AbstractBluetoothModel model) {
     BluetoothService sendingService = s.singleWhere((service) =>
         service.uuid.toString() == "0000ffe0-0000-1000-8000-00805f9b34fb");
+    model.setServices(s);
+
     BluetoothCharacteristic sendingChar = sendingService.characteristics
         .singleWhere(
             (c) => c.uuid.toString() == "0000ffe1-0000-1000-8000-00805f9b34fb");
-    model.setSendingChar(sendingChar);
-    model.setServices(s);
+    model.setCharacteristic(sendingChar);
   }
 
   _disconnect() {
@@ -174,18 +175,19 @@ class _BluetoothState extends State<BluetoothPage> {
       tiles.add(AlertTile(state));
     }
     return ScopedModelDescendant<AbstractBluetoothModel>(
-        builder: (context, child, model) => Scaffold(
-              floatingActionButton: _getFloatingButton(),
-              body: Stack(
-                children: <Widget>[
-                  (isScanning) ? LinearProgressIndicator() : Container(),
-                  (isConnected)
-                      ? ConnectionTile(deviceState)
-                      : ListView(
-                          children: _getScanResultList(tiles, model),
-                        ),
-                ],
-              ),
-            ));
+      builder: (context, child, model) => Scaffold(
+            floatingActionButton: _getFloatingButton(),
+            body: Stack(
+              children: <Widget>[
+                (isScanning) ? LinearProgressIndicator() : Container(),
+                (isConnected)
+                    ? ConnectionTile(deviceState)
+                    : ListView(
+                        children: _getScanResultList(tiles, model),
+                      ),
+              ],
+            ),
+          ),
+    );
   }
 }

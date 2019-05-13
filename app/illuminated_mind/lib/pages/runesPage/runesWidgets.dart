@@ -9,7 +9,6 @@ class RuneSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //print("assets/rune_" + color.toString() + ".png");
     return ScopedModelDescendant<QuestModel>(
       builder: (context, child, model) => model.isRuneUsed(color)
           ? Image(

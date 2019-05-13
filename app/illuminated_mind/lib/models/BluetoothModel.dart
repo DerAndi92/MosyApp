@@ -5,47 +5,51 @@ import 'dart:convert' show utf8;
 
 abstract class AbstractBluetoothModel extends Model {
   BluetoothDevice get device;
-  List<BluetoothService> get services;
   void setDevice(BluetoothDevice device);
+
+  List<BluetoothService> get services;
   void setServices(List<BluetoothService> services);
-  void setSendingChar(BluetoothCharacteristic c);
+
+  void setCharacteristic(BluetoothCharacteristic c);
   void writeCharacteristic(String text);
 }
 
 class BluetoothModel extends AbstractBluetoothModel {
-  /// Device
   BluetoothDevice _device;
   List<BluetoothService> _services = new List();
-  BluetoothCharacteristic _sendingChar;
+  BluetoothCharacteristic _characteristic;
 
-  void setSendingChar(BluetoothCharacteristic c) {
-    _sendingChar = c;
-  }
-
-  BluetoothCharacteristic get sendingChar {
-    return _sendingChar;
+  // device
+  BluetoothDevice get device {
+    return _device;
   }
 
   void setDevice(BluetoothDevice device) {
     _device = device;
   }
 
-  BluetoothDevice get device {
-    return _device;
+  // service
+  List<BluetoothService> get services {
+    return _services;
   }
 
   void setServices(List<BluetoothService> services) {
     _services = services;
   }
 
-  List<BluetoothService> get services {
-    return _services;
+  // characteristic
+  BluetoothCharacteristic get characteristic {
+    return _characteristic;
+  }
+
+  void setCharacteristic(BluetoothCharacteristic c) {
+    _characteristic = c;
   }
 
   void writeCharacteristic(String text) async {
     var encoded = utf8.encode(text);
-
-    await _device.writeCharacteristic(_sendingChar, encoded,
-        type: CharacteristicWriteType.withResponse);
+    _characteristic != null &&
+        await _device.writeCharacteristic(_characteristic, encoded,
+            type: CharacteristicWriteType.withResponse);
   }
 }
