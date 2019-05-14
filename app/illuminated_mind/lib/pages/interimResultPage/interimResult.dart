@@ -1,20 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:illuminated_mind/models/QuestModel.dart';
-import 'package:illuminated_mind/pages/runesPage/runes.dart';
+import 'package:illuminated_mind/models/BluetoothModel.dart';
 
 class InterimResultPage extends StatelessWidget {
   _goToRunes(BuildContext context, QuestModel model) {
     model.generateInterimResult();
     model.setNextLayer();
-    Navigator.push<bool>(
-      context,
-      MaterialPageRoute(builder: (BuildContext context) => RunesPage()),
-    );
+    Navigator.pushReplacementNamed(context, "/runes");
+  }
+
+  _sendState(BuildContext context) {
+    List<int> evaluatedResult =
+        ScopedModel.of<QuestModel>(context).evaluatedResult;
+
+    evaluatedResult.asMap().forEach(
+          (index, evaluatedResult) => {
+                ScopedModel.of<AbstractBluetoothModel>(context)
+                    .writeCharacteristic("f" +
+                        (index + 1).toString() +
+                        evaluatedResult.toString())
+              },
+        );
   }
 
   @override
   Widget build(BuildContext context) {
+    _sendState(context);
     return ScopedModelDescendant<QuestModel>(
       builder: (context, child, model) => Scaffold(
             body: Column(

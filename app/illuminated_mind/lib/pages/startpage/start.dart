@@ -30,10 +30,7 @@ class _StartState extends State<StartPage> {
         counter++;
       });
     } else {
-      Navigator.push<bool>(
-        context,
-        MaterialPageRoute(builder: (BuildContext context) => RunesPage()),
-      );
+      Navigator.pushReplacementNamed(context, "/runes");
     }
   }
 

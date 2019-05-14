@@ -1,41 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:illuminated_mind/pages/runesPage/runesWidgets.dart';
-import 'package:illuminated_mind/pages/interimResultPage/interimResult.dart';
-import 'package:illuminated_mind/pages/finalPage/final.dart';
-
 import 'package:illuminated_mind/utils/Constants.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:illuminated_mind/models/QuestModel.dart';
+import 'package:illuminated_mind/models/BluetoothModel.dart';
 
 class RunesPage extends StatelessWidget {
   void _handleRuneTapped(BuildContext context, int color, QuestModel model) {
     model.replaceValueOfInterimResult(model.runeLayer, color);
+    _sendState(
+        context, "e" + (model.runeLayer + 1).toString() + color.toString());
     model.setNextLayer();
 
     if (model.runeLayer == 4) {
       model.generateEvaluatedResult();
+      print(model.evaluatedResult);
 
-      if (model.evaluatedResult.contains(0) ||
-          model.evaluatedResult.contains(1)) {
-        _goToInterimResultPage(context);
+      if (model.evaluatedResult.contains(Constants.WRONG) ||
+          model.evaluatedResult.contains(Constants.EXISTS)) {
+        Navigator.pushReplacementNamed(context, '/interimResult');
       } else {
-        _goToFinalPage(context);
+        Navigator.pushReplacementNamed(context, '/finalResult');
       }
     }
   }
 
-  _goToInterimResultPage(BuildContext context) {
-    Navigator.push<bool>(
-      context,
-      MaterialPageRoute(builder: (BuildContext context) => InterimResultPage()),
-    );
-  }
-
-  _goToFinalPage(BuildContext context) {
-    Navigator.push<bool>(
-      context,
-      MaterialPageRoute(builder: (BuildContext context) => FinalPage()),
-    );
+  _sendState(BuildContext context, String code) {
+    print("SENDING => " + code.toString());
+    ScopedModel.of<AbstractBluetoothModel>(context).writeCharacteristic(code);
   }
 
   @override

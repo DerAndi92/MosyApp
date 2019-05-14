@@ -1,6 +1,7 @@
 import 'package:scoped_model/scoped_model.dart';
 import 'package:illuminated_mind/utils/Constants.dart';
 import 'dart:math';
+import 'package:flutter/material.dart';
 
 class QuestModel extends Model {
   List<int> _finalResult = []; // Endergebnis
@@ -8,6 +9,8 @@ class QuestModel extends Model {
   List<int> _evaluatedResult = []; // ausgewertetes Ergebnis
   int _runeLayer = 0;
 
+  static QuestModel of(BuildContext context) =>
+      ScopedModel.of<QuestModel>(context);
   // ----- aktuelle Runen-Ebene
   int get runeLayer {
     return _runeLayer;
@@ -81,5 +84,13 @@ class QuestModel extends Model {
       return true;
     }
     return false;
+  }
+
+  void resetGame() {
+    _runeLayer = 0;
+    _finalResult = [];
+    _interimResult = [0, 0, 0, 0];
+    _evaluatedResult = [];
+    generateFinalResult();
   }
 }

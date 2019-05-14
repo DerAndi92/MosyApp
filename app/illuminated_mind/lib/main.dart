@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:scoped_model/scoped_model.dart';
 import 'package:illuminated_mind/pages/bluetoothPage/bluetooth.dart';
-//import 'package:illuminated_mind/pages/runesPage/runes.dart';
-
+import 'package:illuminated_mind/pages/finalPage/final.dart';
+import 'package:illuminated_mind/pages/interimResultPage/interimResult.dart';
+import 'package:illuminated_mind/pages/startPage/start.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:illuminated_mind/pages/runesPage/runes.dart';
 import 'package:illuminated_mind/models/BluetoothModel.dart';
 import 'package:illuminated_mind/models/QuestModel.dart';
 
@@ -43,6 +45,13 @@ class IlluminatedMind extends StatelessWidget {
         child: MaterialApp(
           theme: _themeData,
           home: BluetoothPage(),
+          routes: {
+            '/bluetooth': (BuildContext context) => BluetoothPage(),
+            '/start': (BuildContext context) => StartPage(),
+            '/runes': (BuildContext context) => RunesPage(),
+            '/interimResult': (BuildContext context) => InterimResultPage(),
+            '/finalResult': (BuildContext context) => FinalPage(),
+          },
         ),
       ),
     );

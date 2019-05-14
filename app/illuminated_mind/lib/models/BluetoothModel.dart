@@ -1,4 +1,5 @@
 import 'package:scoped_model/scoped_model.dart';
+import 'package:flutter/material.dart';
 
 import 'package:flutter_blue/flutter_blue.dart';
 import 'dart:convert' show utf8;
@@ -18,6 +19,9 @@ class BluetoothModel extends AbstractBluetoothModel {
   BluetoothDevice _device;
   List<BluetoothService> _services = new List();
   BluetoothCharacteristic _characteristic;
+
+  static BluetoothModel of(BuildContext context) =>
+      ScopedModel.of<BluetoothModel>(context);
 
   // device
   BluetoothDevice get device {
@@ -50,6 +54,6 @@ class BluetoothModel extends AbstractBluetoothModel {
     var encoded = utf8.encode(text);
     _characteristic != null &&
         await _device.writeCharacteristic(_characteristic, encoded,
-            type: CharacteristicWriteType.withResponse);
+            type: CharacteristicWriteType.withoutResponse);
   }
 }

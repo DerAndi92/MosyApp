@@ -52,16 +52,16 @@ class _BluetoothState extends State<BluetoothPage> {
     });
   }
 
-  @override
-  void dispose() {
-    _stateSubscription?.cancel();
-    _stateSubscription = null;
-    _scanSubscription?.cancel();
-    _scanSubscription = null;
-    deviceConnection?.cancel();
-    deviceConnection = null;
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _stateSubscription?.cancel();
+  //   _stateSubscription = null;
+  //   _scanSubscription?.cancel();
+  //   _scanSubscription = null;
+  //   deviceConnection?.cancel();
+  //   deviceConnection = null;
+  //   super.dispose();
+  // }
 
   _startScan() {
     _scanSubscription = _flutterBlue

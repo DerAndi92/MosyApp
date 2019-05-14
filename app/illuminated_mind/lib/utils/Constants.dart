@@ -16,5 +16,5 @@ class Constants {
 
   // OTHERS
   static const int MIN = 1;
-  static const int MAX = 9;
+  static const int MAX = 8 + 1;
 }

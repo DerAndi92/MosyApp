@@ -30,11 +30,9 @@ class ConnectionTile extends StatelessWidget {
   final BluetoothDeviceState deviceState;
 
   ConnectionTile(this.deviceState);
+
   _goToStart(BuildContext context) {
-    Navigator.push<bool>(
-      context,
-      MaterialPageRoute(builder: (BuildContext context) => StartPage()),
-    );
+    Navigator.pushReplacementNamed(context, "/start");
   }
 
   _buildTile(BuildContext context, QuestModel model) {
