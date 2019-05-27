@@ -53,6 +53,9 @@ flutter:
     - rune_7.png
     - rune_8.png
     - award.png
+    - assets/pages/bluetooth/
+    - assets/pages/start/
+    - assets/pages/runes/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see

@@ -22,6 +22,7 @@ class _BluetoothState extends State<BluetoothPage> {
   StreamSubscription _scanSubscription;
   Map<DeviceIdentifier, ScanResult> scanResults = new Map();
   bool isScanning = false;
+  bool scanned = false;
 
   /// State
   StreamSubscription _stateSubscription;
@@ -74,6 +75,7 @@ class _BluetoothState extends State<BluetoothPage> {
 
     setState(() {
       isScanning = true;
+      scanned = true;
     });
   }
 
@@ -139,21 +141,6 @@ class _BluetoothState extends State<BluetoothPage> {
     });
   }
 
-  _getFloatingButton() {
-    if (isConnected || state != BluetoothState.on) {
-      return null;
-    }
-    if (isScanning) {
-      return FloatingActionButton(
-        child: Icon(Icons.stop),
-        onPressed: _stopScan,
-      );
-    } else {
-      return FloatingActionButton(
-          child: Icon(Icons.search), onPressed: _startScan);
-    }
-  }
-
   _getScanResultList(List<Widget> tiles, AbstractBluetoothModel model) {
     if (!isConnected) tiles.addAll(_addScanResultTiles(model));
     return tiles;
@@ -168,6 +155,37 @@ class _BluetoothState extends State<BluetoothPage> {
         .toList();
   }
 
+  _getSearchButton() {
+    return Container(
+        margin: const EdgeInsets.only(top: 550.0, left: 65.0, right: 65.0),
+        child: ConstrainedBox(
+            constraints: BoxConstraints.expand(),
+            child: FlatButton(
+                onPressed: (isScanning) ? _stopScan : _startScan,
+                padding: EdgeInsets.all(0.0),
+                child: (isScanning) ? Image.asset('assets/pages/bluetooth/bluetooth_stop_btn.png') : Image.asset('assets/pages/bluetooth/bluetooth_btn.png')))
+    );
+  }
+
+  _buildScanListView(tiles, AbstractBluetoothModel model) {
+    if(scanned) {
+      return Container(
+        margin: const EdgeInsets.only(
+            top: 275.0, bottom: 100.0, left: 16.0, right: 16.0),
+        padding: const EdgeInsets.only(top: 3.5, bottom: 7.0),
+        decoration: new BoxDecoration(
+          image: new DecorationImage(
+            image: new AssetImage("assets/pages/bluetooth/bluetooth_box.png"),
+            fit: BoxFit.fill,),
+        ),
+        child: ListView(
+          children: _getScanResultList(tiles, model),
+        ),
+      );
+    }
+    return Container();
+  }
+
   @override
   Widget build(BuildContext context) {
     var tiles = List<Widget>();
@@ -176,15 +194,18 @@ class _BluetoothState extends State<BluetoothPage> {
     }
     return ScopedModelDescendant<AbstractBluetoothModel>(
       builder: (context, child, model) => Scaffold(
-            floatingActionButton: _getFloatingButton(),
             body: Stack(
               children: <Widget>[
+                new Container(
+                  decoration: new BoxDecoration(
+                    image: new DecorationImage(image: new AssetImage("assets/pages/bluetooth/background.png"), fit: BoxFit.cover,),
+                  )
+                ),
                 (isScanning) ? LinearProgressIndicator() : Container(),
                 (isConnected)
                     ? ConnectionTile(deviceState)
-                    : ListView(
-                        children: _getScanResultList(tiles, model),
-                      ),
+                    :_buildScanListView(tiles, model),
+                (!isConnected || state != BluetoothState.on) ? _getSearchButton() : Container(),
               ],
             ),
           ),
