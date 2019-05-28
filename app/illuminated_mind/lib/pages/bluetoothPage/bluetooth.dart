@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:illuminated_mind/models/BluetoothModel.dart';
+import 'package:illuminated_mind/models/AudioModel.dart';
 import 'package:illuminated_mind/pages/bluetoothPage/bluetoothWidgets.dart';
 
 class BluetoothPage extends StatefulWidget {
@@ -163,12 +164,15 @@ class _BluetoothState extends State<BluetoothPage> {
             child: FlatButton(
                 onPressed: (isScanning) ? _stopScan : _startScan,
                 padding: EdgeInsets.all(0.0),
-                child: (isScanning) ? Image.asset('assets/pages/bluetooth/bluetooth_stop_btn.png') : Image.asset('assets/pages/bluetooth/bluetooth_btn.png')))
-    );
+                child: (isScanning)
+                    ? Image.asset(
+                        'assets/pages/bluetooth/bluetooth_stop_btn.png')
+                    : Image.asset(
+                        'assets/pages/bluetooth/bluetooth_btn.png'))));
   }
 
   _buildScanListView(tiles, AbstractBluetoothModel model) {
-    if(scanned) {
+    if (scanned) {
       return Container(
         margin: const EdgeInsets.only(
             top: 275.0, bottom: 100.0, left: 16.0, right: 16.0),
@@ -176,7 +180,8 @@ class _BluetoothState extends State<BluetoothPage> {
         decoration: new BoxDecoration(
           image: new DecorationImage(
             image: new AssetImage("assets/pages/bluetooth/bluetooth_box.png"),
-            fit: BoxFit.fill,),
+            fit: BoxFit.fill,
+          ),
         ),
         child: ListView(
           children: _getScanResultList(tiles, model),
@@ -192,20 +197,27 @@ class _BluetoothState extends State<BluetoothPage> {
     if (state != BluetoothState.on) {
       tiles.add(AlertTile(state));
     }
+    ScopedModel.of<AudioModel>(context).loadAudio();
+
     return ScopedModelDescendant<AbstractBluetoothModel>(
       builder: (context, child, model) => Scaffold(
             body: Stack(
               children: <Widget>[
                 new Container(
-                  decoration: new BoxDecoration(
-                    image: new DecorationImage(image: new AssetImage("assets/pages/bluetooth/background.png"), fit: BoxFit.cover,),
-                  )
-                ),
+                    decoration: new BoxDecoration(
+                  image: new DecorationImage(
+                    image:
+                        new AssetImage("assets/pages/bluetooth/background.png"),
+                    fit: BoxFit.cover,
+                  ),
+                )),
                 (isScanning) ? LinearProgressIndicator() : Container(),
                 (isConnected)
                     ? ConnectionTile(deviceState)
-                    :_buildScanListView(tiles, model),
-                (!isConnected || state != BluetoothState.on) ? _getSearchButton() : Container(),
+                    : _buildScanListView(tiles, model),
+                (!isConnected || state != BluetoothState.on)
+                    ? _getSearchButton()
+                    : Container(),
               ],
             ),
           ),

@@ -12,7 +12,7 @@ class InterimResultPage extends StatelessWidget {
   }
 
   _sendState(BuildContext context) {
-    sleep(const Duration(seconds: 1));
+    sleep(const Duration(seconds: 2));
 
     List<int> evaluatedResult =
         ScopedModel.of<QuestModel>(context).evaluatedResult;

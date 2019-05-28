@@ -3,6 +3,7 @@ import 'package:flutter_blue/flutter_blue.dart';
 import 'package:illuminated_mind/pages/startPage/start.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:illuminated_mind/models/QuestModel.dart';
+import 'package:illuminated_mind/models/BluetoothModel.dart';
 
 class AlertTile extends StatelessWidget {
   final BluetoothState state;
@@ -32,6 +33,7 @@ class ConnectionTile extends StatelessWidget {
   ConnectionTile(this.deviceState);
 
   _goToStart(BuildContext context) {
+    ScopedModel.of<AbstractBluetoothModel>(context).writeCharacteristic("s");
     Navigator.pushReplacementNamed(context, "/start");
   }
 

@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 
 class AudioModel extends Model {
   static AudioCache player = AudioCache(prefix: 'audio/');
-}
 
-/////
-///
+  static AudioModel of(BuildContext context) =>
+      ScopedModel.of<AudioModel>(context);
 
-class Audio {
-  static AudioCache player = AudioCache(prefix: 'audio/');
-
-  Audio() {
+  loadAudio() {
     player.loadAll(['magic.mp3']);
+  }
+
+  play(String name) {
+    player.play(name);
   }
 }

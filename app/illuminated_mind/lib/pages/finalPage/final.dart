@@ -6,7 +6,7 @@ import 'dart:io';
 
 class FinalPage extends StatelessWidget {
   _sendState(BuildContext context) {
-    sleep(const Duration(seconds: 1));
+    sleep(const Duration(seconds: 2));
 
     ScopedModel.of<AbstractBluetoothModel>(context).writeCharacteristic("xg");
   }
@@ -35,6 +35,8 @@ class FinalPage extends StatelessWidget {
                         child: Text("Neu starten"),
                         onPressed: () {
                           model.resetGame();
+                          ScopedModel.of<AbstractBluetoothModel>(context)
+                              .writeCharacteristic("xa");
                           Navigator.pushReplacementNamed(context, "/runes");
                         },
                       ),
