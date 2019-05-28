@@ -48,7 +48,7 @@ class QuestModel extends Model {
 
   void generateInterimResult() {
     for (var i = 0; i < _interimResult.length; i++) {
-      if (_evaluatedResult[i] != 2) _interimResult[i] = 0;
+      if (_evaluatedResult[i] != Constants.RIGHT) _interimResult[i] = 0;
     }
   }
 

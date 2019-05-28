@@ -12,7 +12,7 @@ class RuneSection extends StatelessWidget {
     return ScopedModelDescendant<QuestModel>(
       builder: (context, child, model) => model.isRuneUsed(color)
           ? Image(
-              image: AssetImage("assets/rune_0.png"),
+              image: AssetImage("assets/pages/runes/rune_0.png"),
             )
           : GestureDetector(
               onTap: () {
@@ -20,7 +20,8 @@ class RuneSection extends StatelessWidget {
               },
               child: Container(
                 child: Image(
-                  image: AssetImage("assets/rune_" + color.toString() + ".png"),
+                  image: AssetImage(
+                      "assets/pages/runes/rune_" + color.toString() + ".png"),
                 ),
               ),
             ),

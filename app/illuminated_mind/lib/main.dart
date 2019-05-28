@@ -44,7 +44,7 @@ class IlluminatedMind extends StatelessWidget {
         model: bluetoothModel,
         child: MaterialApp(
           theme: _themeData,
-          home: RunesPage(),
+          home: BluetoothPage(),
           routes: {
             '/bluetooth': (BuildContext context) => BluetoothPage(),
             '/start': (BuildContext context) => StartPage(),

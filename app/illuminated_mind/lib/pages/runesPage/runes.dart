@@ -30,6 +30,12 @@ class RunesPage extends StatelessWidget {
     ScopedModel.of<AbstractBluetoothModel>(context).writeCharacteristic(code);
   }
 
+  _resetGame(BuildContext context) {
+    ScopedModel.of<QuestModel>(context).resetGame();
+    ScopedModel.of<AbstractBluetoothModel>(context).writeCharacteristic("xa");
+    Navigator.pushReplacementNamed(context, '/start');
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<QuestModel>(
@@ -37,7 +43,10 @@ class RunesPage extends StatelessWidget {
             body: Stack(children: [
               DecoratedBox(
                 decoration: BoxDecoration(
-                  image: DecorationImage(image: new AssetImage("assets/pages/runes/background.png"), fit: BoxFit.cover,),
+                  image: DecorationImage(
+                    image: new AssetImage("assets/pages/runes/background.png"),
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 child: new Column(
                   children: <Widget>[
@@ -55,47 +64,46 @@ class RunesPage extends StatelessWidget {
                     Expanded(
                       child: GridView.count(
                         primary: false,
-                        padding: const EdgeInsets.all(20.0),
+                        padding: const EdgeInsets.all(30.0),
                         crossAxisSpacing: 10.0,
-                        crossAxisCount: 3,
+                        crossAxisCount: 2,
                         children: <Widget>[
                           RuneSection(
                               color: Constants.RED,
-                              onTap: () =>
-                                  _handleRuneTapped(context, Constants.RED, model)),
+                              onTap: () => _handleRuneTapped(
+                                  context, Constants.RED, model)),
                           RuneSection(
                               color: Constants.GREEN,
-                              onTap: () =>
-                                  _handleRuneTapped(context, Constants.GREEN, model)),
+                              onTap: () => _handleRuneTapped(
+                                  context, Constants.GREEN, model)),
                           RuneSection(
                               color: Constants.BLUE,
-                              onTap: () =>
-                                  _handleRuneTapped(context, Constants.BLUE, model)),
-                          RuneSection(
-                              color: Constants.PURPLE,
                               onTap: () => _handleRuneTapped(
-                                  context, Constants.PURPLE, model)),
+                                  context, Constants.BLUE, model)),
                           RuneSection(
                               color: Constants.YELLOW,
                               onTap: () => _handleRuneTapped(
                                   context, Constants.YELLOW, model)),
                           RuneSection(
-                              color: Constants.BROWN,
-                              onTap: () =>
-                                  _handleRuneTapped(context, Constants.BROWN, model)),
-                          RuneSection(
-                              color: Constants.ORANGE,
+                              color: Constants.PURPLE,
                               onTap: () => _handleRuneTapped(
-                                  context, Constants.ORANGE, model)),
+                                  context, Constants.PURPLE, model)),
                           RuneSection(
-                              color: Constants.CYAN,
-                              onTap: () =>
-                                  _handleRuneTapped(context, Constants.CYAN, model)),
+                              color: Constants.PINK,
+                              onTap: () => _handleRuneTapped(
+                                  context, Constants.PINK, model)),
                         ],
                       ),
                     ),
                   ],
                 ),
+              ),
+              IconButton(
+                icon: Icon(Icons.close),
+                tooltip: 'Increase volume by 10',
+                onPressed: () {
+                  _resetGame(context);
+                },
               ),
             ]),
           ),

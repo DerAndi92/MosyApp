@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:illuminated_mind/models/QuestModel.dart';
 import 'package:illuminated_mind/models/BluetoothModel.dart';
+import 'dart:io';
 
 class InterimResultPage extends StatelessWidget {
   _goToRunes(BuildContext context, QuestModel model) {
@@ -11,17 +12,18 @@ class InterimResultPage extends StatelessWidget {
   }
 
   _sendState(BuildContext context) {
+    sleep(const Duration(seconds: 1));
+
     List<int> evaluatedResult =
         ScopedModel.of<QuestModel>(context).evaluatedResult;
-
+    String sendingString = "f";
     evaluatedResult.asMap().forEach(
-          (index, evaluatedResult) => {
-                ScopedModel.of<AbstractBluetoothModel>(context)
-                    .writeCharacteristic("f" +
-                        (index + 1).toString() +
-                        evaluatedResult.toString())
-              },
+          (index, evaluatedResult) =>
+              {sendingString = sendingString + evaluatedResult.toString()},
         );
+    ScopedModel.of<AbstractBluetoothModel>(context)
+        .writeCharacteristic(sendingString);
+    print("FEEDBACK => " + sendingString);
   }
 
   @override
@@ -45,22 +47,22 @@ class InterimResultPage extends StatelessWidget {
                     crossAxisCount: 2,
                     children: <Widget>[
                       Image(
-                        image: AssetImage("assets/rune_" +
+                        image: AssetImage("assets/pages/runes/rune_" +
                             model.interimResult[0].toString() +
                             ".png"),
                       ),
                       Image(
-                        image: AssetImage("assets/rune_" +
+                        image: AssetImage("assets/pages/runes/rune_" +
                             model.interimResult[1].toString() +
                             ".png"),
                       ),
                       Image(
-                        image: AssetImage("assets/rune_" +
+                        image: AssetImage("assets/pages/runes/rune_" +
                             model.interimResult[2].toString() +
                             ".png"),
                       ),
                       Image(
-                        image: AssetImage("assets/rune_" +
+                        image: AssetImage("assets/pages/runes/rune_" +
                             model.interimResult[3].toString() +
                             ".png"),
                       ),

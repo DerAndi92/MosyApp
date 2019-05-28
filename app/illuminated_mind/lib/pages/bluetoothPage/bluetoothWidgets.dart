@@ -70,12 +70,14 @@ class ConnectionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<QuestModel>(
       builder: (context, child, model) => Container(
-            alignment: Alignment(0.0, 0.0),
+          alignment: Alignment(0.0, 0.0),
+          child: Padding(
+            padding: EdgeInsets.only(bottom: 150),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: _buildTile(context, model)),
-          ),
+          )),
     );
   }
 }
