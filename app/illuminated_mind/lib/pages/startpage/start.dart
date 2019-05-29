@@ -30,12 +30,9 @@ class _StartState extends State<StartPage> {
         counter++;
       });
     } else {
+      ScopedModel.of<AbstractBluetoothModel>(context).writeCharacteristic("s1");
       Navigator.pushReplacementNamed(context, "/runes");
     }
-  }
-
-  void _writeToBlue(AbstractBluetoothModel model) {
-    model.writeCharacteristic("Hallo");
   }
 
   @override
@@ -49,10 +46,6 @@ class _StartState extends State<StartPage> {
                   child: Text(buttonText ? "Los gehts" : "Weiter"),
                   onPressed: () => handleBubbleText(),
                 ),
-                RaisedButton(
-                  child: Text(model.device.name.toString()),
-                  onPressed: () => _writeToBlue(model),
-                )
               ]),
             ),
           ),

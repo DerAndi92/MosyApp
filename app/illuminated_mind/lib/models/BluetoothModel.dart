@@ -52,6 +52,8 @@ class BluetoothModel extends AbstractBluetoothModel {
 
   void writeCharacteristic(String text) async {
     var encoded = utf8.encode(text);
+    print("SENDING => " + text);
+
     _characteristic != null &&
         await _device.writeCharacteristic(_characteristic, encoded,
             type: CharacteristicWriteType.withoutResponse);

@@ -11,10 +11,13 @@ import 'package:illuminated_mind/models/QuestModel.dart';
 import 'package:illuminated_mind/models/AudioModel.dart';
 
 void main() {
-  runApp(IlluminatedMind(
-      bluetoothModel: BluetoothModel(),
-      questModel: QuestModel(),
-      audioModel: AudioModel()));
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(IlluminatedMind(
+        bluetoothModel: BluetoothModel(),
+        questModel: QuestModel(),
+        audioModel: AudioModel()));
+  });
 }
 
 final ThemeData _themeData = new ThemeData(

@@ -5,30 +5,40 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:illuminated_mind/models/QuestModel.dart';
 import 'package:illuminated_mind/models/BluetoothModel.dart';
 import 'package:illuminated_mind/models/AudioModel.dart';
+import 'dart:io';
 
 class RunesPage extends StatelessWidget {
   void _handleRuneTapped(BuildContext context, int color, QuestModel model) {
     ScopedModel.of<AudioModel>(context).play('magic.mp3');
     model.replaceValueOfInterimResult(model.runeLayer, color);
-    _sendState(
-        context, "e" + (model.runeLayer + 1).toString() + color.toString());
+
+    var actualLayer = (model.runeLayer + 1).toString();
     model.setNextLayer();
 
     if (model.runeLayer == 4) {
-      model.generateEvaluatedResult();
-      // print(model.evaluatedResult);
+      _sendState(context, "e" + actualLayer + color.toString() + "5");
 
+      model.generateEvaluatedResult();
       if (model.evaluatedResult.contains(Constants.WRONG) ||
           model.evaluatedResult.contains(Constants.EXISTS)) {
         Navigator.pushReplacementNamed(context, '/interimResult');
       } else {
+        sleep(const Duration(seconds: 2));
+
+        _sendState(context, "xg");
         Navigator.pushReplacementNamed(context, '/finalResult');
       }
+    } else {
+      _sendState(
+          context,
+          "e" +
+              actualLayer +
+              color.toString() +
+              (model.runeLayer + 1).toString());
     }
   }
 
   _sendState(BuildContext context, String code) {
-    print("SENDING => " + code.toString());
     ScopedModel.of<AbstractBluetoothModel>(context).writeCharacteristic(code);
   }
 

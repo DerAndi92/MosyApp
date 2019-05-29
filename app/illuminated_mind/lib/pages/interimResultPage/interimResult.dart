@@ -9,6 +9,8 @@ class InterimResultPage extends StatelessWidget {
     model.generateInterimResult();
     model.setNextLayer();
     Navigator.pushReplacementNamed(context, "/runes");
+    ScopedModel.of<AbstractBluetoothModel>(context)
+        .writeCharacteristic("e00" + (model.runeLayer + 1).toString());
   }
 
   _sendState(BuildContext context) {
