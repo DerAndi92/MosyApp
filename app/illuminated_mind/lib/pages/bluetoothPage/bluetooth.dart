@@ -58,7 +58,8 @@ class _BluetoothState extends State<BluetoothPage> {
     });
 
     img_bluetooth_btn = Image.asset("assets/pages/bluetooth/bluetooth_btn.png");
-    img_bluetooth_stop_btn = Image.asset("assets/pages/bluetooth/bluetooth_stop_btn.png");
+    img_bluetooth_stop_btn =
+        Image.asset("assets/pages/bluetooth/bluetooth_stop_btn.png");
     img_bluetooth_box = Image.asset("assets/pages/bluetooth/bluetooth_box.png");
   }
 
@@ -88,7 +89,6 @@ class _BluetoothState extends State<BluetoothPage> {
         .listen((scanResult) {
       setState(() {
         scanResults[scanResult.device.id] = scanResult;
-
       });
     }, onDone: _stopScan);
 
@@ -176,7 +176,7 @@ class _BluetoothState extends State<BluetoothPage> {
 
   _onSearchButtonPress() {
     ScopedModel.of<AudioModel>(context).play("click.mp3");
-    (isScanning) ? _stopScan : _startScan;
+    (isScanning) ? _stopScan() : _startScan();
   }
 
   _getSearchButton() {
@@ -187,10 +187,9 @@ class _BluetoothState extends State<BluetoothPage> {
             child: FlatButton(
                 onPressed: _onSearchButtonPress,
                 padding: EdgeInsets.all(0.0),
-                child: (isScanning) ? img_bluetooth_stop_btn : img_bluetooth_btn
-            )
-        )
-    );
+                child: (isScanning)
+                    ? img_bluetooth_stop_btn
+                    : img_bluetooth_btn)));
   }
 
   _buildScanListView(tiles, AbstractBluetoothModel model) {

@@ -26,7 +26,6 @@ class InterimResultPage extends StatelessWidget {
         );
     ScopedModel.of<AbstractBluetoothModel>(context)
         .writeCharacteristic(sendingString);
-    print("FEEDBACK => " + sendingString);
   }
 
   @override

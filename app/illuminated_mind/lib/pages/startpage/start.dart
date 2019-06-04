@@ -11,9 +11,14 @@ class StartPage extends StatefulWidget {
 
 class _StartState extends State<StartPage> {
   final List<String> bubbleStrings = [
-    "Willkommen zu deiner Prüfung",
+    "Willkommen zu deiner Prüfung, Lehrling",
     "Du bist ein Lehrling der Zauberkünste und möchtest deinen Abschluss erlangen.",
-    "bla bla bla... Du kannst jetzt starten"
+    "Du bestehst die Prüfung, indem du vier Runen in der richtigen Reihenfolge wählst.",
+    "Nachdem du vier Runen gewählt hast, erhälst du eine Auswertung deiner Auswahl.",
+    "Bleibt das Licht der Kugel an, hast du die richtige Rune für diese Posistion gewählt. ",
+    "Blinkt die Kugel, kommt die Rune in der Lösung vor, aber sie ist an der falschen Position. ",
+    "Geht das Licht aus, dann ist weder Rune noch Position richtig.",
+    "Nun hast du alle wichtigen Informationen. Viel Erfolg bei deiner Prüfung!"
   ];
 
   //Images
@@ -60,34 +65,32 @@ class _StartState extends State<StartPage> {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<AbstractBluetoothModel>(
       builder: (context, child, model) => Scaffold(
-            body: Stack(
-              children: <Widget>[
-                Container(
+              body: Stack(
+            children: <Widget>[
+              Container(
                   decoration: new BoxDecoration(
-                    image: new DecorationImage(
-                      image:
-                      new AssetImage("assets/pages/start/background.png"),
-                      fit: BoxFit.cover,
-                    ),
-                  )),
-                Center(
-                  child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-                    SpeechBubbleWidget(bubbleStrings[counter]),
-                  ]),
+                image: new DecorationImage(
+                  image: new AssetImage("assets/pages/start/background.png"),
+                  fit: BoxFit.cover,
                 ),
-                Container(
-                  margin: const EdgeInsets.only(top: 550.0, left: 40.0, right: 40.0),
+              )),
+              Padding(
+                padding: EdgeInsets.all(20),
+                child: SpeechBubbleWidget(bubbleStrings[counter]),
+              ),
+              Container(
+                  margin: const EdgeInsets.only(
+                      top: 550.0, left: 40.0, right: 40.0),
                   child: ConstrainedBox(
-                    constraints: BoxConstraints.expand(),
-                    child: FlatButton(
-                      child: (buttonText) ? img_start_btn_go: img_start_btn_more,
-                      onPressed: () => handleBubbleText(),
-                    )
-                  )
-                ),
-              ],
-            )
-          ),
+                      constraints: BoxConstraints.expand(),
+                      child: FlatButton(
+                        child: (buttonText)
+                            ? img_start_btn_go
+                            : img_start_btn_more,
+                        onPressed: () => handleBubbleText(),
+                      ))),
+            ],
+          )),
     );
   }
 }
