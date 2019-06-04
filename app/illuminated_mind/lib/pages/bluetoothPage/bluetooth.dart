@@ -25,6 +25,11 @@ class _BluetoothState extends State<BluetoothPage> {
   bool isScanning = false;
   bool scanned = false;
 
+  //Images
+  Image img_bluetooth_btn;
+  Image img_bluetooth_stop_btn;
+  Image img_bluetooth_box;
+
   /// State
   StreamSubscription _stateSubscription;
   BluetoothState state = BluetoothState.unknown;
@@ -52,6 +57,19 @@ class _BluetoothState extends State<BluetoothPage> {
         state = s;
       });
     });
+
+    img_bluetooth_btn = Image.asset("assets/pages/bluetooth/bluetooth_btn.png");
+    img_bluetooth_stop_btn = Image.asset("assets/pages/bluetooth/bluetooth_stop_btn.png");
+    img_bluetooth_box = Image.asset("assets/pages/bluetooth/bluetooth_box.png");
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    precacheImage(img_bluetooth_btn.image, context);
+    precacheImage(img_bluetooth_stop_btn.image, context);
+    precacheImage(img_bluetooth_box.image, context);
   }
 
   // @override
@@ -164,11 +182,10 @@ class _BluetoothState extends State<BluetoothPage> {
             child: FlatButton(
                 onPressed: (isScanning) ? _stopScan : _startScan,
                 padding: EdgeInsets.all(0.0),
-                child: (isScanning)
-                    ? Image.asset(
-                        'assets/pages/bluetooth/bluetooth_stop_btn.png')
-                    : Image.asset(
-                        'assets/pages/bluetooth/bluetooth_btn.png'))));
+                child: (isScanning) ? img_bluetooth_stop_btn : img_bluetooth_btn
+            )
+        )
+    );
   }
 
   _buildScanListView(tiles, AbstractBluetoothModel model) {
@@ -179,7 +196,7 @@ class _BluetoothState extends State<BluetoothPage> {
         padding: const EdgeInsets.only(top: 3.5, bottom: 7.0),
         decoration: new BoxDecoration(
           image: new DecorationImage(
-            image: new AssetImage("assets/pages/bluetooth/bluetooth_box.png"),
+            image: img_bluetooth_box.image,
             fit: BoxFit.fill,
           ),
         ),
