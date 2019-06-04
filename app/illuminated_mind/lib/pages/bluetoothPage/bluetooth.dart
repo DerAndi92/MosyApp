@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -89,6 +88,7 @@ class _BluetoothState extends State<BluetoothPage> {
         .listen((scanResult) {
       setState(() {
         scanResults[scanResult.device.id] = scanResult;
+
       });
     }, onDone: _stopScan);
 
@@ -174,13 +174,18 @@ class _BluetoothState extends State<BluetoothPage> {
         .toList();
   }
 
+  _onSearchButtonPress() {
+    ScopedModel.of<AudioModel>(context).play("click.mp3");
+    (isScanning) ? _stopScan : _startScan;
+  }
+
   _getSearchButton() {
     return Container(
         margin: const EdgeInsets.only(top: 550.0, left: 65.0, right: 65.0),
         child: ConstrainedBox(
             constraints: BoxConstraints.expand(),
             child: FlatButton(
-                onPressed: (isScanning) ? _stopScan : _startScan,
+                onPressed: _onSearchButtonPress,
                 padding: EdgeInsets.all(0.0),
                 child: (isScanning) ? img_bluetooth_stop_btn : img_bluetooth_btn
             )
@@ -215,6 +220,7 @@ class _BluetoothState extends State<BluetoothPage> {
       tiles.add(AlertTile(state));
     }
     ScopedModel.of<AudioModel>(context).loadAudio();
+    ScopedModel.of<AudioModel>(context).playBackground();
 
     return ScopedModelDescendant<AbstractBluetoothModel>(
       builder: (context, child, model) => Scaffold(

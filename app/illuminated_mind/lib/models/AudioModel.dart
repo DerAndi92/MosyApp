@@ -9,10 +9,23 @@ class AudioModel extends Model {
       ScopedModel.of<AudioModel>(context);
 
   loadAudio() {
-    player.loadAll(['magic.mp3']);
+    player.loadAll([
+      'rune_1.mp3',
+      'rune_2.mp3',
+      'rune_3.mp3',
+      'rune_4.mp3',
+      'rune_5.mp3',
+      'rune_6.mp3',
+      'background.mp3',
+    ]);
   }
 
   play(String name) {
     player.play(name);
   }
+
+  playBackground() {
+    player.loop('background.mp3', volume: 0.2);
+  }
+
 }

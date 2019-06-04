@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:illuminated_mind/models/QuestModel.dart';
 import 'package:illuminated_mind/models/BluetoothModel.dart';
+import 'package:illuminated_mind/models/AudioModel.dart';
 import 'dart:io';
 
 class InterimResultPage extends StatelessWidget {
@@ -75,6 +76,7 @@ class InterimResultPage extends StatelessWidget {
                   padding: EdgeInsets.all(30),
                   child: RaisedButton(
                       onPressed: () {
+                        ScopedModel.of<AudioModel>(context).play("click.mp3");
                         _goToRunes(context, model);
                       },
                       child: Text(("Nächste Runde"))),
