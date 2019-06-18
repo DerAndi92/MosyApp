@@ -41,7 +41,7 @@ class _InterimResultState extends State<InterimResultPage> {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 3), () {
       setState(() {
         _opacityBubble = 0;
         _opacityButton = 1;

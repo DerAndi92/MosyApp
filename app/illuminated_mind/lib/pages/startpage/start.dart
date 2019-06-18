@@ -32,6 +32,7 @@ class _StartState extends State<StartPage> {
           });
         });
       } else {
+        ScopedModel.of<AudioModel>(context).play("start.mp3");
         ScopedModel.of<AbstractBluetoothModel>(context).writeCharacteristic(
             "s1");
         Navigator.pushReplacementNamed(context, "/runes");

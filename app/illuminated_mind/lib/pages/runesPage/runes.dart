@@ -44,6 +44,7 @@ class _RunesState extends State<RunesPage> {
             sleep(const Duration(seconds: 1));
 
             _sendState(context, "xg");
+            ScopedModel.of<AudioModel>(context).play("final.mp3");
             Navigator.pushReplacementNamed(context, '/finalResult');
           }
         } else {

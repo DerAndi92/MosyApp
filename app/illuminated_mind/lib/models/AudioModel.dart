@@ -17,6 +17,8 @@ class AudioModel extends Model {
       'rune_5.mp3',
       'rune_6.mp3',
       'background.mp3',
+      'start.mp3',
+      'final.mp3',
     ]);
   }
 
