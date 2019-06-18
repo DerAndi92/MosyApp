@@ -7,6 +7,7 @@ import 'dart:convert' show utf8;
 abstract class AbstractBluetoothModel extends Model {
   BluetoothDevice get device;
   void setDevice(BluetoothDevice device);
+  void sendData(String text);
 
   List<BluetoothService> get services;
   void setServices(List<BluetoothService> services);
@@ -19,6 +20,8 @@ class BluetoothModel extends AbstractBluetoothModel {
   BluetoothDevice _device;
   List<BluetoothService> _services = new List();
   BluetoothCharacteristic _characteristic;
+
+  List<String> listToSend = [];
 
   static BluetoothModel of(BuildContext context) =>
       ScopedModel.of<BluetoothModel>(context);
@@ -46,14 +49,32 @@ class BluetoothModel extends AbstractBluetoothModel {
     return _characteristic;
   }
 
-  void setCharacteristic(BluetoothCharacteristic c) {
+  void setCharacteristic(BluetoothCharacteristic c) async {
     _characteristic = c;
+    await device.setNotifyValue(c, true);
+    device.onValueChanged(c).listen((d) {
+      var decodedText = utf8.decode(d).trim();
+      listToSend.remove(decodedText);
+      if (listToSend.isNotEmpty) {
+        sendData(listToSend[0], isNext: true);
+      }
+    });
+  }
+
+  void sendData(String text, {bool isNext = false}) async {
+    if (listToSend.isEmpty) {
+      listToSend.add(text.trim());
+      writeCharacteristic(text);
+    } else if (isNext) {
+      writeCharacteristic(text);
+    } else {
+      listToSend.add(text.trim());
+    }
   }
 
   void writeCharacteristic(String text) async {
     var encoded = utf8.encode(text);
     print("SENDING => " + text);
-
     _characteristic != null &&
         await _device.writeCharacteristic(_characteristic, encoded,
             type: CharacteristicWriteType.withoutResponse);

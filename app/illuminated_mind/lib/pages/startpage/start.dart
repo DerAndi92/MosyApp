@@ -8,7 +8,6 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartState extends State<StartPage> {
-
   List bubbles;
   List buttons;
   double _opacity = 0;
@@ -16,10 +15,10 @@ class _StartState extends State<StartPage> {
   bool waitAnimation = false;
 
   void handleProgress() {
-    if(!waitAnimation) {
+    if (!waitAnimation) {
       ScopedModel.of<AudioModel>(context).play("click.mp3");
 
-      if (counter < bubbles.length -1) {
+      if (counter < bubbles.length - 1) {
         setState(() {
           _opacity = 0;
           waitAnimation = true;
@@ -33,8 +32,7 @@ class _StartState extends State<StartPage> {
         });
       } else {
         ScopedModel.of<AudioModel>(context).play("start.mp3");
-        ScopedModel.of<AbstractBluetoothModel>(context).writeCharacteristic(
-            "s1");
+        ScopedModel.of<AbstractBluetoothModel>(context).sendData("s1");
         Navigator.pushReplacementNamed(context, "/runes");
       }
     }
@@ -84,15 +82,14 @@ class _StartState extends State<StartPage> {
                   opacity: _opacity,
                   duration: Duration(milliseconds: 600),
                   child: Container(
-                  margin: const EdgeInsets.only(
-                      top: 20.0, left: 30.0, right: 55.0, bottom: 335.0),
-                  decoration: new BoxDecoration(
-                    image: new DecorationImage(
-                      image: bubbles[counter].image,
-                    fit: BoxFit.fill,
-                )))
-              ),
-               Container(
+                      margin: const EdgeInsets.only(
+                          top: 20.0, left: 30.0, right: 55.0, bottom: 335.0),
+                      decoration: new BoxDecoration(
+                          image: new DecorationImage(
+                        image: bubbles[counter].image,
+                        fit: BoxFit.fill,
+                      )))),
+              Container(
                   margin: const EdgeInsets.only(
                       top: 550.0, left: 40.0, right: 40.0),
                   child: ConstrainedBox(
@@ -100,9 +97,7 @@ class _StartState extends State<StartPage> {
                       child: FlatButton(
                         child: buttons[counter],
                         onPressed: () => handleProgress(),
-                      )
-                  )
-              ),
+                      ))),
             ],
           )),
     );

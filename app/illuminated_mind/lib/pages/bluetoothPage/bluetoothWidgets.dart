@@ -33,7 +33,7 @@ class ConnectionTile extends StatelessWidget {
   ConnectionTile(this.deviceState);
 
   _goToStart(BuildContext context) {
-    ScopedModel.of<AbstractBluetoothModel>(context).writeCharacteristic("s0");
+    ScopedModel.of<AbstractBluetoothModel>(context).sendData("s0");
     Navigator.pushReplacementNamed(context, "/start");
   }
 
