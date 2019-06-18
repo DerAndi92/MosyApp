@@ -47,6 +47,7 @@ flutter:
     - award.png
     - assets/pages/bluetooth/
     - assets/pages/start/
+    - assets/pages/result/
     - assets/pages/runes/
     - assets/audio/
   # An image asset can refer to one or more resolution-specific "variants", see

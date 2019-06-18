@@ -8,6 +8,7 @@ class QuestModel extends Model {
   List<int> _interimResult = [0, 0, 0, 0]; // Zwischenergebnis
   List<int> _evaluatedResult = []; // ausgewertetes Ergebnis
   int _runeLayer = 0;
+  int _round = 0;
 
   static QuestModel of(BuildContext context) =>
       ScopedModel.of<QuestModel>(context);
@@ -31,6 +32,7 @@ class QuestModel extends Model {
   }
 
   void generateFinalResult() {
+    _round = 0;
     _finalResult = [];
     var _random = new Random();
     while (_finalResult.length < 4) {
@@ -48,6 +50,7 @@ class QuestModel extends Model {
   }
 
   void generateInterimResult() {
+    _round++;
     for (var i = 0; i < _interimResult.length; i++) {
       if (_evaluatedResult[i] != Constants.RIGHT) _interimResult[i] = 0;
     }
@@ -85,6 +88,10 @@ class QuestModel extends Model {
       return true;
     }
     return false;
+  }
+
+  int getRound() {
+    return _round;
   }
 
   void resetGame() {

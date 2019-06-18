@@ -25,6 +25,6 @@ class AudioModel extends Model {
   }
 
   playBackground() {
-    // player.loop('background.mp3', volume: 0.2);
+    //player.loop('background.mp3', volume: 0.2);
   }
 }

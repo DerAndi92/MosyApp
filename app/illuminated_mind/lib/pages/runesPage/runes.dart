@@ -8,9 +8,19 @@ import 'package:illuminated_mind/models/BluetoothModel.dart';
 import 'package:illuminated_mind/models/AudioModel.dart';
 import 'dart:io';
 
-class RunesPage extends StatelessWidget {
+class RunesPage extends StatefulWidget {
+  _RunesState createState() => _RunesState();
+}
+
+class _RunesState extends State<RunesPage> {
 
   bool _inAction = false;
+  bool _help = false;
+
+  //Help
+  bool _helpFirst = false;
+  double _opacity = 1;
+  bool waitHelpAnimation = false;
 
   bool _handleRuneTapped(BuildContext context, int color, QuestModel model) {
     if(!_inAction) {
@@ -56,9 +66,29 @@ class RunesPage extends StatelessWidget {
   }
 
   _resetGame(BuildContext context) {
+    ScopedModel.of<AudioModel>(context).play("click.mp3");
     ScopedModel.of<QuestModel>(context).resetGame();
     ScopedModel.of<AbstractBluetoothModel>(context).writeCharacteristic("xa");
     Navigator.pushReplacementNamed(context, '/start');
+  }
+
+  _handleHelpClick() {
+    if(!waitHelpAnimation) {
+      ScopedModel.of<AudioModel>(context).play("click.mp3");
+
+      setState(() {
+        waitHelpAnimation = true;
+        _opacity = (_opacity == 0) ? 1 : 0;
+      });
+
+      Future.delayed(const Duration(milliseconds: 500), () {
+        setState(() {
+          _help = (_help || !_helpFirst) ? false : true;
+          _helpFirst = true;
+          waitHelpAnimation = false;
+        });
+      });
+    }
   }
 
   @override
@@ -75,59 +105,68 @@ class RunesPage extends StatelessWidget {
               child:
                 Stack(
                     children: <Widget> [
+                    GestureDetector(
+                      onTap: () => _handleHelpClick(),
+                      child:
                       Container(
-                        alignment: Alignment(0.0, 0.0),
-                        height: 63,
-                        margin: EdgeInsets.all(30),
-                        decoration: new BoxDecoration(
-                          image: new DecorationImage(
-                            image: new AssetImage("assets/pages/runes/choose_rune.png"),
-                            fit: BoxFit.contain,
-                          ),
-                        ),
+                          margin: const EdgeInsets.only(top: 580, left: 315, right: 10),
+                          decoration: new BoxDecoration(
+                              image: new DecorationImage(
+                                image: new AssetImage("assets/pages/runes/help_button.png"),
+                                fit: BoxFit.contain,
+                              )
+                          )
+                        )
                       ),
-                      IconButton(
-                        icon: Icon(Icons.close),
-                        onPressed: () {
-                          _resetGame(context);
-                        },
+                      GestureDetector(
+                          onTap: () => _resetGame(context),
+                          child:
+                          Container(
+                              margin: const EdgeInsets.only(top: 580, left: 10, right: 315),
+                              decoration: new BoxDecoration(
+                                  image: new DecorationImage(
+                                    image: new AssetImage("assets/pages/runes/close_button.png"),
+                                    fit: BoxFit.contain,
+                                  )
+                              )
+                          )
                       ),
                       Container(
                         child:
                         Stack(
                           children: [
                         RuneSection(
-                          position: [120, 20],
+                          position: [60, 20],
                           color: Constants.RED,
                           onTap: () =>
                               _handleRuneTapped(context, Constants.RED, model),
                         ),
                         RuneSection(
-                          position: [120, 190],
+                          position: [60, 190],
                           color: Constants.GREEN,
                           onTap: () =>
                               _handleRuneTapped(context, Constants.GREEN, model),
                         ),
                         RuneSection(
-                          position: [290, 20],
+                          position: [230, 20],
                           color: Constants.BLUE,
                           onTap: () =>
                               _handleRuneTapped(context, Constants.BLUE, model),
                         ),
                         RuneSection(
-                          position: [290, 190],
+                          position: [230, 190],
                           color: Constants.YELLOW,
                           onTap: () =>
                               _handleRuneTapped(context, Constants.YELLOW, model),
                         ),
                         RuneSection(
-                          position: [460, 20],
+                          position: [400, 20],
                           color: Constants.PURPLE,
                           onTap: () =>
                               _handleRuneTapped(context, Constants.PURPLE, model),
                         ),
                         RuneSection(
-                          position: [460, 190],
+                          position: [400, 190],
                           color: Constants.PINK,
                           onTap: () =>
                               _handleRuneTapped(context, Constants.PINK, model),
@@ -136,6 +175,23 @@ class RunesPage extends StatelessWidget {
 
                         ),
                       ])),
+                      ((model.getRound() == 0 && !_helpFirst) || _help || waitHelpAnimation) ?
+                      AnimatedOpacity(
+                          opacity: _opacity,
+                          duration: Duration(milliseconds: 500),
+                          child: GestureDetector(
+                            onTap: () => _handleHelpClick(),
+                            child:
+                          Container(
+
+                              margin: const EdgeInsets.all(10),
+                              decoration: new BoxDecoration(
+                                  image: new DecorationImage(
+                                    image: new AssetImage("assets/pages/runes/anleitung.png"),
+                                    fit: BoxFit.fill,
+                                  )))
+                      )) :
+                          Container()
                     ]
                   ),
             ),
