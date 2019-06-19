@@ -42,6 +42,8 @@ class _StartState extends State<StartPage> {
   void initState() {
     super.initState();
 
+    ScopedModel.of<AudioModel>(context).playBackground();
+
     buttons = [
       Image.asset("assets/pages/start/start_btn_0.png"),
       Image.asset("assets/pages/start/start_btn_1.png"),

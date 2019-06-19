@@ -101,7 +101,7 @@ class _RunesState extends State<RunesPage> {
                     onTap: () => _handleHelpClick(),
                     child: Container(
                         margin: const EdgeInsets.only(
-                            top: 580, left: 315, right: 10),
+                            top: 580, left: 120, right: 120),
                         decoration: new BoxDecoration(
                             image: new DecorationImage(
                           image: new AssetImage(
@@ -112,7 +112,7 @@ class _RunesState extends State<RunesPage> {
                     onTap: () => _resetGame(context),
                     child: Container(
                         margin: const EdgeInsets.only(
-                            top: 580, left: 10, right: 315),
+                            bottom: 595, left: 10, right: 330),
                         decoration: new BoxDecoration(
                             image: new DecorationImage(
                           image: new AssetImage(

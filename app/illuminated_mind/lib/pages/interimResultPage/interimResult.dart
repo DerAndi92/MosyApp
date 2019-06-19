@@ -10,6 +10,7 @@ class InterimResultPage extends StatefulWidget {
 
 class _InterimResultState extends State<InterimResultPage> {
   double _opacityBubble = 1;
+  double _opacityButton = 1;
 
   _goToRunes(BuildContext context, QuestModel model) {
     model.generateInterimResult();
@@ -35,11 +36,12 @@ class _InterimResultState extends State<InterimResultPage> {
     super.initState();
     _sendState(context);
 
-    Future.delayed(const Duration(seconds: 8), () {
+    Future.delayed(const Duration(seconds: 10), () {
       setState(() {
         _opacityBubble = 0;
       });
     });
+
   }
 
   @override
@@ -100,26 +102,31 @@ class _InterimResultState extends State<InterimResultPage> {
                   duration: Duration(milliseconds: 400),
                   child: Container(
                       margin: const EdgeInsets.only(
-                          top: 430.0, left: 60.0, right: 10, bottom: 30.0),
+                          top: 240.0, left: 90.0, right: 10, bottom: 230.0),
                       decoration: new BoxDecoration(
                           image: new DecorationImage(
                         image:
                             Image.asset("assets/pages/result/bubble.png").image,
                         fit: BoxFit.fill,
                       )))),
-              Container(
-                margin:
-                    const EdgeInsets.only(top: 550.0, left: 40.0, right: 40.0),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints.expand(),
-                  child: FlatButton(
-                    child: Image.asset("assets/pages/result/btn_next.png"),
-                    onPressed: () {
-                      ScopedModel.of<AudioModel>(context).play("click.mp3");
-                      _goToRunes(context, model);
-                    },
-                  ),
-                ),
+              AnimatedOpacity(
+                  opacity: _opacityButton,
+                  duration: Duration(milliseconds: 400),
+                  child:
+                    Container(
+                      margin:
+                          const EdgeInsets.only(top: 550.0, left: 40.0, right: 40.0),
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints.expand(),
+                        child: FlatButton(
+                          child: Image.asset("assets/pages/result/btn_next.png"),
+                          onPressed: () {
+                            ScopedModel.of<AudioModel>(context).play("click.mp3");
+                            _goToRunes(context, model);
+                          },
+                        ),
+                      ),
+                )
               ),
             ],
           )),

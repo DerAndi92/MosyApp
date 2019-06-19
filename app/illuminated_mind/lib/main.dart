@@ -57,7 +57,7 @@ class IlluminatedMind extends StatelessWidget {
           model: audioModel,
           child: MaterialApp(
             theme: _themeData,
-            home: BluetoothPage(),
+            home: StartPage(),
             routes: {
               '/bluetooth': (BuildContext context) => BluetoothPage(),
               '/start': (BuildContext context) => StartPage(),

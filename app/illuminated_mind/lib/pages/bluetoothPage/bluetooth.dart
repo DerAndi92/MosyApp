@@ -219,7 +219,7 @@ class _BluetoothState extends State<BluetoothPage> {
       tiles.add(AlertTile(state));
     }
     ScopedModel.of<AudioModel>(context).loadAudio();
-    ScopedModel.of<AudioModel>(context).playBackground();
+
 
     return ScopedModelDescendant<AbstractBluetoothModel>(
       builder: (context, child, model) => Scaffold(
