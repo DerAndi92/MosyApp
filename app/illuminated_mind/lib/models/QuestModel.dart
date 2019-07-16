@@ -40,7 +40,6 @@ class QuestModel extends Model {
           Constants.MIN + _random.nextInt(Constants.MAX - Constants.MIN);
       if (!_finalResult.contains(randomInt)) _finalResult.add(randomInt);
     }
-    print(finalResult);
     notifyListeners();
   }
 

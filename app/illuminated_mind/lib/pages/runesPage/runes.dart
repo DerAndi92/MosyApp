@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:illuminated_mind/pages/runesPage/runesWidgets.dart';
+import 'package:illuminated_mind/pages/runesPage/widgets/runeSection.dart';
 import 'package:illuminated_mind/utils/Constants.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:illuminated_mind/models/QuestModel.dart';
@@ -96,89 +96,109 @@ class _RunesState extends State<RunesPage> {
                   fit: BoxFit.cover,
                 ),
               ),
-              child: Stack(children: <Widget>[
-                GestureDetector(
-                    onTap: () => _handleHelpClick(),
-                    child: Container(
-                        margin: const EdgeInsets.only(
-                            top: 580, left: 120, right: 120),
-                        decoration: new BoxDecoration(
-                            image: new DecorationImage(
-                          image: new AssetImage(
-                              "assets/pages/runes/help_button.png"),
-                          fit: BoxFit.contain,
-                        )))),
-                GestureDetector(
-                    onTap: () => _resetGame(context),
-                    child: Container(
-                        margin: const EdgeInsets.only(
-                            bottom: 595, left: 10, right: 330),
-                        decoration: new BoxDecoration(
-                            image: new DecorationImage(
-                          image: new AssetImage(
-                              "assets/pages/runes/close_button.png"),
-                          fit: BoxFit.contain,
-                        )))),
-                Container(
-                    child: Stack(children: [
-                  RuneSection(
-                    position: [60, 20],
-                    color: Constants.RED,
-                    onTap: () =>
-                        _handleRuneTapped(context, Constants.RED, model),
-                  ),
-                  RuneSection(
-                    position: [60, 190],
-                    color: Constants.GREEN,
-                    onTap: () =>
-                        _handleRuneTapped(context, Constants.GREEN, model),
-                  ),
-                  RuneSection(
-                    position: [230, 20],
-                    color: Constants.BLUE,
-                    onTap: () =>
-                        _handleRuneTapped(context, Constants.BLUE, model),
-                  ),
-                  RuneSection(
-                    position: [230, 190],
-                    color: Constants.YELLOW,
-                    onTap: () =>
-                        _handleRuneTapped(context, Constants.YELLOW, model),
-                  ),
-                  RuneSection(
-                    position: [400, 20],
-                    color: Constants.PURPLE,
-                    onTap: () =>
-                        _handleRuneTapped(context, Constants.PURPLE, model),
-                  ),
-                  RuneSection(
-                    position: [400, 190],
-                    color: Constants.PINK,
-                    onTap: () =>
-                        _handleRuneTapped(context, Constants.PINK, model),
-                  ),
-                  Container(),
-                ])),
-                ((model.getRound() == 0 && !_helpFirst) ||
-                        _help ||
-                        _waitHelpAnimation)
-                    ? AnimatedOpacity(
-                        opacity: _opacity,
-                        duration: Duration(milliseconds: 500),
-                        child: GestureDetector(
-                            onTap: () => _handleHelpClick(),
-                            child: Container(
-                                margin: const EdgeInsets.all(10),
-                                decoration: new BoxDecoration(
-                                    image: new DecorationImage(
-                                  image: new AssetImage(
-                                      "assets/pages/runes/anleitung.png"),
-                                  fit: BoxFit.fill,
-                                )))))
-                    : Container()
-              ]),
+              child: Stack(
+                children: <Widget>[
+                  _buildHelpButton(),
+                  _buildCloseButton(context),
+                  _buildRunesSection(context, model),
+                  ((model.getRound() == 0 && !_helpFirst) ||
+                          _help ||
+                          _waitHelpAnimation)
+                      ? _buildHelpView()
+                      : Container()
+                ],
+              ),
             ),
           ),
+    );
+  }
+
+  AnimatedOpacity _buildHelpView() {
+    return AnimatedOpacity(
+      opacity: _opacity,
+      duration: Duration(milliseconds: 500),
+      child: GestureDetector(
+        onTap: () => _handleHelpClick(),
+        child: Container(
+          margin: const EdgeInsets.all(10),
+          decoration: new BoxDecoration(
+            image: new DecorationImage(
+              image: new AssetImage("assets/pages/runes/anleitung.png"),
+              fit: BoxFit.fill,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Container _buildRunesSection(BuildContext context, QuestModel model) {
+    return Container(
+      child: Stack(
+        children: [
+          RuneSection(
+            position: [60, 20],
+            color: Constants.RED,
+            onTap: () => _handleRuneTapped(context, Constants.RED, model),
+          ),
+          RuneSection(
+            position: [60, 190],
+            color: Constants.GREEN,
+            onTap: () => _handleRuneTapped(context, Constants.GREEN, model),
+          ),
+          RuneSection(
+            position: [230, 20],
+            color: Constants.BLUE,
+            onTap: () => _handleRuneTapped(context, Constants.BLUE, model),
+          ),
+          RuneSection(
+            position: [230, 190],
+            color: Constants.YELLOW,
+            onTap: () => _handleRuneTapped(context, Constants.YELLOW, model),
+          ),
+          RuneSection(
+            position: [400, 20],
+            color: Constants.PURPLE,
+            onTap: () => _handleRuneTapped(context, Constants.PURPLE, model),
+          ),
+          RuneSection(
+            position: [400, 190],
+            color: Constants.PINK,
+            onTap: () => _handleRuneTapped(context, Constants.PINK, model),
+          ),
+          Container(),
+        ],
+      ),
+    );
+  }
+
+  GestureDetector _buildCloseButton(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _resetGame(context),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 595, left: 10, right: 330),
+        decoration: new BoxDecoration(
+          image: new DecorationImage(
+            image: new AssetImage("assets/pages/runes/close_button.png"),
+            fit: BoxFit.contain,
+          ),
+        ),
+      ),
+    );
+  }
+
+  GestureDetector _buildHelpButton() {
+    return GestureDetector(
+      onTap: () => _handleHelpClick(),
+      child: Container(
+        margin: const EdgeInsets.only(top: 580, left: 120, right: 120),
+        decoration: new BoxDecoration(
+          image: new DecorationImage(
+            image: new AssetImage("assets/pages/runes/help_button.png"),
+            fit: BoxFit.contain,
+          ),
+        ),
+      ),
     );
   }
 }

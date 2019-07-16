@@ -11,6 +11,7 @@ import 'package:illuminated_mind/models/QuestModel.dart';
 import 'package:illuminated_mind/models/AudioModel.dart';
 
 void main() {
+  SystemChrome.setEnabledSystemUIOverlays([]);
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
     runApp(IlluminatedMind(
@@ -48,7 +49,6 @@ class IlluminatedMind extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIOverlays([]);
     return ScopedModel<QuestModel>(
       model: questModel,
       child: ScopedModel<AbstractBluetoothModel>(

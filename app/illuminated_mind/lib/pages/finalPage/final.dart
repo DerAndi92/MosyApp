@@ -19,23 +19,28 @@ class FinalPage extends StatelessWidget {
             body: Stack(
               children: <Widget>[
                 Container(
-                    decoration: new BoxDecoration(
-                  image: new DecorationImage(
-                    image: new AssetImage("assets/pages/final/background.png"),
-                    fit: BoxFit.cover,
+                  decoration: new BoxDecoration(
+                    image: new DecorationImage(
+                      image:
+                          new AssetImage("assets/pages/final/background.png"),
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                )),
+                ),
                 GestureDetector(
-                    onTap: () => {_playAgain(model, context)},
-                    child: Container(
-                        margin: const EdgeInsets.only(
-                            top: 580, left: 315, right: 10),
-                        decoration: new BoxDecoration(
-                            image: new DecorationImage(
-                          image:
-                              new AssetImage("assets/pages/final/btn_play.png"),
-                          fit: BoxFit.contain,
-                        )))),
+                  onTap: () => {_playAgain(model, context)},
+                  child: Container(
+                    margin:
+                        const EdgeInsets.only(top: 580, left: 315, right: 10),
+                    decoration: new BoxDecoration(
+                      image: new DecorationImage(
+                        image:
+                            new AssetImage("assets/pages/final/btn_play.png"),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

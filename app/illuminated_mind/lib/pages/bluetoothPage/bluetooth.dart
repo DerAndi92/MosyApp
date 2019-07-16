@@ -1,14 +1,12 @@
-// Copyright 2017, Paul DeMarco.
-// All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:illuminated_mind/pages/bluetoothPage/widgets/alertTile.dart';
+import 'package:illuminated_mind/pages/bluetoothPage/widgets/connectionTile.dart';
+import 'package:illuminated_mind/pages/bluetoothPage/widgets/scanResultTile.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:illuminated_mind/models/BluetoothModel.dart';
 import 'package:illuminated_mind/models/AudioModel.dart';
-import 'package:illuminated_mind/pages/bluetoothPage/bluetoothWidgets.dart';
 
 class BluetoothPage extends StatefulWidget {
   @override
@@ -25,9 +23,9 @@ class _BluetoothState extends State<BluetoothPage> {
   bool scanned = false;
 
   //Images
-  Image img_bluetooth_btn;
-  Image img_bluetooth_stop_btn;
-  Image img_bluetooth_box;
+  Image _imgBluetoothBtn;
+  Image _imgBluetoothStopBtn;
+  Image _imgBluetoothBox;
 
   /// State
   StreamSubscription _stateSubscription;
@@ -57,31 +55,20 @@ class _BluetoothState extends State<BluetoothPage> {
       });
     });
 
-    img_bluetooth_btn = Image.asset("assets/pages/bluetooth/bluetooth_btn.png");
-    img_bluetooth_stop_btn =
+    // prepare images
+    _imgBluetoothBtn = Image.asset("assets/pages/bluetooth/bluetooth_btn.png");
+    _imgBluetoothStopBtn =
         Image.asset("assets/pages/bluetooth/bluetooth_stop_btn.png");
-    img_bluetooth_box = Image.asset("assets/pages/bluetooth/bluetooth_box.png");
+    _imgBluetoothBox = Image.asset("assets/pages/bluetooth/bluetooth_box.png");
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
-    precacheImage(img_bluetooth_btn.image, context);
-    precacheImage(img_bluetooth_stop_btn.image, context);
-    precacheImage(img_bluetooth_box.image, context);
+    precacheImage(_imgBluetoothBtn.image, context);
+    precacheImage(_imgBluetoothStopBtn.image, context);
+    precacheImage(_imgBluetoothBox.image, context);
   }
-
-  // @override
-  // void dispose() {
-  //   _stateSubscription?.cancel();
-  //   _stateSubscription = null;
-  //   _scanSubscription?.cancel();
-  //   _scanSubscription = null;
-  //   deviceConnection?.cancel();
-  //   deviceConnection = null;
-  //   super.dispose();
-  // }
 
   _startScan() {
     _scanSubscription = _flutterBlue
@@ -108,7 +95,9 @@ class _BluetoothState extends State<BluetoothPage> {
 
   _connect(BluetoothDevice d, AbstractBluetoothModel model) async {
     _device = d;
+    // Set global device at Scopedmodel
     model.setDevice(d);
+
     // Connect to device
     deviceConnection = _flutterBlue
         .connect(_device, timeout: const Duration(seconds: 4))
@@ -116,6 +105,7 @@ class _BluetoothState extends State<BluetoothPage> {
           null,
           onDone: _disconnect,
         );
+
     // Update the connection state immediately
     _device.state.then((s) {
       setState(() {
@@ -187,9 +177,8 @@ class _BluetoothState extends State<BluetoothPage> {
             child: FlatButton(
                 onPressed: _onSearchButtonPress,
                 padding: EdgeInsets.all(0.0),
-                child: (isScanning)
-                    ? img_bluetooth_stop_btn
-                    : img_bluetooth_btn)));
+                child:
+                    (isScanning) ? _imgBluetoothStopBtn : _imgBluetoothBtn)));
   }
 
   _buildScanListView(tiles, AbstractBluetoothModel model) {
@@ -200,7 +189,7 @@ class _BluetoothState extends State<BluetoothPage> {
         padding: const EdgeInsets.only(top: 3.5, bottom: 7.0),
         decoration: new BoxDecoration(
           image: new DecorationImage(
-            image: img_bluetooth_box.image,
+            image: _imgBluetoothBox.image,
             fit: BoxFit.fill,
           ),
         ),
@@ -220,7 +209,6 @@ class _BluetoothState extends State<BluetoothPage> {
     }
     ScopedModel.of<AudioModel>(context).loadAudio();
 
-
     return ScopedModelDescendant<AbstractBluetoothModel>(
       builder: (context, child, model) => Scaffold(
             body: Stack(
@@ -233,10 +221,15 @@ class _BluetoothState extends State<BluetoothPage> {
                     fit: BoxFit.cover,
                   ),
                 )),
+                // display progressbar or empty Container
                 (isScanning) ? LinearProgressIndicator() : Container(),
+
+                // display current ConnectionView or scanned ListView
                 (isConnected)
                     ? ConnectionTile(deviceState)
                     : _buildScanListView(tiles, model),
+
+                // display search-Icon or empy Container
                 (!isConnected || state != BluetoothState.on)
                     ? _getSearchButton()
                     : Container(),

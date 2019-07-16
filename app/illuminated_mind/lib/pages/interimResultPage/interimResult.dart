@@ -41,95 +41,115 @@ class _InterimResultState extends State<InterimResultPage> {
         _opacityBubble = 0;
       });
     });
-
   }
 
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<QuestModel>(
       builder: (context, child, model) => Scaffold(
-              body: Stack(
-            children: <Widget>[
-              Container(
+            body: Stack(
+              children: <Widget>[
+                Container(
                   decoration: new BoxDecoration(
-                image: new DecorationImage(
-                  image: new AssetImage("assets/pages/result/background.png"),
-                  fit: BoxFit.cover,
+                    image: new DecorationImage(
+                      image:
+                          new AssetImage("assets/pages/result/background.png"),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-              )),
-              Positioned(
-                  top: 125,
-                  left: 30,
-                  child: Image(
-                    height: 100,
-                    width: 100,
-                    image: AssetImage("assets/pages/runes/rune_" +
-                        model.interimResult[0].toString() +
-                        ".png"),
-                  )),
-              Positioned(
-                  top: 20,
-                  left: 70,
-                  child: Image(
-                    height: 100,
-                    width: 100,
-                    image: AssetImage("assets/pages/runes/rune_" +
-                        model.interimResult[1].toString() +
-                        ".png"),
-                  )),
-              Positioned(
-                  top: 20,
-                  right: 70,
-                  child: Image(
-                    height: 100,
-                    width: 100,
-                    image: AssetImage("assets/pages/runes/rune_" +
-                        model.interimResult[2].toString() +
-                        ".png"),
-                  )),
-              Positioned(
-                  top: 125,
-                  right: 30,
-                  child: Image(
-                    height: 100,
-                    width: 100,
-                    image: AssetImage("assets/pages/runes/rune_" +
-                        model.interimResult[3].toString() +
-                        ".png"),
-                  )),
-              AnimatedOpacity(
-                  opacity: _opacityBubble,
-                  duration: Duration(milliseconds: 400),
-                  child: Container(
-                      margin: const EdgeInsets.only(
-                          top: 240.0, left: 90.0, right: 10, bottom: 230.0),
-                      decoration: new BoxDecoration(
-                          image: new DecorationImage(
-                        image:
-                            Image.asset("assets/pages/result/bubble.png").image,
-                        fit: BoxFit.fill,
-                      )))),
-              AnimatedOpacity(
-                  opacity: _opacityButton,
-                  duration: Duration(milliseconds: 400),
-                  child:
-                    Container(
-                      margin:
-                          const EdgeInsets.only(top: 550.0, left: 40.0, right: 40.0),
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints.expand(),
-                        child: FlatButton(
-                          child: Image.asset("assets/pages/result/btn_next.png"),
-                          onPressed: () {
-                            ScopedModel.of<AudioModel>(context).play("click.mp3");
-                            _goToRunes(context, model);
-                          },
-                        ),
-                      ),
-                )
-              ),
-            ],
-          )),
+                _buildSelectedRuneSection(model),
+                _buildSpeechBubble(),
+                _buildNextButton(context, model),
+              ],
+            ),
+          ),
     );
+  }
+
+  AnimatedOpacity _buildNextButton(BuildContext context, QuestModel model) {
+    return AnimatedOpacity(
+      opacity: _opacityButton,
+      duration: Duration(milliseconds: 400),
+      child: Container(
+        margin: const EdgeInsets.only(top: 550.0, left: 40.0, right: 40.0),
+        child: ConstrainedBox(
+          constraints: BoxConstraints.expand(),
+          child: FlatButton(
+            child: Image.asset("assets/pages/result/btn_next.png"),
+            onPressed: () {
+              ScopedModel.of<AudioModel>(context).play("click.mp3");
+              _goToRunes(context, model);
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  AnimatedOpacity _buildSpeechBubble() {
+    return AnimatedOpacity(
+      opacity: _opacityBubble,
+      duration: Duration(milliseconds: 400),
+      child: Container(
+        margin: const EdgeInsets.only(
+            top: 240.0, left: 90.0, right: 10, bottom: 230.0),
+        decoration: new BoxDecoration(
+          image: new DecorationImage(
+            image: Image.asset("assets/pages/result/bubble.png").image,
+            fit: BoxFit.fill,
+          ),
+        ),
+      ),
+    );
+  }
+
+  _buildSelectedRuneSection(QuestModel model) {
+    return <Widget>[
+      Positioned(
+        top: 125,
+        left: 30,
+        child: Image(
+          height: 100,
+          width: 100,
+          image: AssetImage("assets/pages/runes/rune_" +
+              model.interimResult[0].toString() +
+              ".png"),
+        ),
+      ),
+      Positioned(
+        top: 20,
+        left: 70,
+        child: Image(
+          height: 100,
+          width: 100,
+          image: AssetImage("assets/pages/runes/rune_" +
+              model.interimResult[1].toString() +
+              ".png"),
+        ),
+      ),
+      Positioned(
+        top: 20,
+        right: 70,
+        child: Image(
+          height: 100,
+          width: 100,
+          image: AssetImage("assets/pages/runes/rune_" +
+              model.interimResult[2].toString() +
+              ".png"),
+        ),
+      ),
+      Positioned(
+        top: 125,
+        right: 30,
+        child: Image(
+          height: 100,
+          width: 100,
+          image: AssetImage("assets/pages/runes/rune_" +
+              model.interimResult[3].toString() +
+              ".png"),
+        ),
+      ),
+    ];
   }
 }

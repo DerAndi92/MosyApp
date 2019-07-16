@@ -62,7 +62,6 @@ class _StartState extends State<StartPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
     buttons.forEach((e) => precacheImage(e.image, context));
     bubbles.forEach((e) => precacheImage(e.image, context));
   }
@@ -73,35 +72,46 @@ class _StartState extends State<StartPage> {
       builder: (context, child, model) => Scaffold(
               body: Stack(
             children: <Widget>[
-              Container(
-                  decoration: new BoxDecoration(
-                image: new DecorationImage(
-                  image: new AssetImage("assets/pages/start/background.png"),
-                  fit: BoxFit.cover,
-                ),
-              )),
-              AnimatedOpacity(
-                  opacity: _opacity,
-                  duration: Duration(milliseconds: 600),
-                  child: Container(
-                      margin: const EdgeInsets.only(
-                          top: 20.0, left: 30.0, right: 55.0, bottom: 335.0),
-                      decoration: new BoxDecoration(
-                          image: new DecorationImage(
-                        image: bubbles[counter].image,
-                        fit: BoxFit.fill,
-                      )))),
-              Container(
-                  margin: const EdgeInsets.only(
-                      top: 550.0, left: 40.0, right: 40.0),
-                  child: ConstrainedBox(
-                      constraints: BoxConstraints.expand(),
-                      child: FlatButton(
-                        child: buttons[counter],
-                        onPressed: () => handleProgress(),
-                      ))),
+              _buildBackground(),
+              _buildSpeachBubble(),
+              _buildButton(),
             ],
           )),
     );
+  }
+
+  Container _buildButton() {
+    return Container(
+        margin: const EdgeInsets.only(top: 550.0, left: 40.0, right: 40.0),
+        child: ConstrainedBox(
+            constraints: BoxConstraints.expand(),
+            child: FlatButton(
+              child: buttons[counter],
+              onPressed: () => handleProgress(),
+            )));
+  }
+
+  AnimatedOpacity _buildSpeachBubble() {
+    return AnimatedOpacity(
+        opacity: _opacity,
+        duration: Duration(milliseconds: 600),
+        child: Container(
+            margin: const EdgeInsets.only(
+                top: 20.0, left: 30.0, right: 55.0, bottom: 335.0),
+            decoration: new BoxDecoration(
+                image: new DecorationImage(
+              image: bubbles[counter].image,
+              fit: BoxFit.fill,
+            ))));
+  }
+
+  Container _buildBackground() {
+    return Container(
+        decoration: new BoxDecoration(
+      image: new DecorationImage(
+        image: new AssetImage("assets/pages/start/background.png"),
+        fit: BoxFit.cover,
+      ),
+    ));
   }
 }
