@@ -55,7 +55,7 @@ int Umwandlung(String Clr, int pos) {
     g = 0;
     b = 0;
   }
-  else if (Clr.equals("gr��n")) {
+  else if (Clr.equals("gruen")) {
     r = 130;
     g = 200;
     b = 0;
@@ -81,7 +81,7 @@ int Umwandlung(String Clr, int pos) {
     g = 150;
     b = 150;
   }
-  else if (Clr.equals("wei��")) {
+  else if (Clr.equals("weiss")) {
     r = 190;
     g = 230;
     b = 190;
@@ -96,7 +96,7 @@ String setFarbe(int Light, int Farbe) {
     Umwandlung(Colour, Light);
   }
   if (Farbe == 2) {
-    Colour = "gr��n";
+    Colour = "gruen";
     Umwandlung(Colour, Light);
   }
   if (Farbe == 3) {
@@ -264,7 +264,7 @@ void loop() {
       if (Eingabe.charAt(1) == '0') {
         // alle Lichter weiß
         for (int i = 1; i <= 10; i = i + 3) {
-          Umwandlung("wei��", i);
+          Umwandlung("weiss", i);
           DmxSimple.write(i, r);
           DmxSimple.write(i + 1, g);
           DmxSimple.write(i + 2, b);
@@ -273,7 +273,7 @@ void loop() {
       }
       if (Eingabe.charAt(1) == '1') {
         // erster Scheinwerfer weiß, Rest aus
-        Umwandlung("wei��", 1);
+        Umwandlung("weiss", 1);
         DmxSimple.write(rpos, r);
         DmxSimple.write(gpos, g);
         DmxSimple.write(bpos, b);
@@ -297,7 +297,7 @@ void loop() {
         DmxSimple.write(bpos, b);
       }
       if (nextone <= 4) { // wenn >4 dann letzte Farbeingabe in der Runde, daher kein weißer Scheinwerfer als nächstes
-        Umwandlung("wei��", nextone);
+        Umwandlung("weiss", nextone);
         DmxSimple.write(rpos, r);
         DmxSimple.write(gpos, g);
         DmxSimple.write(bpos, b);
@@ -328,7 +328,7 @@ void loop() {
       if (Eingabe.charAt(1) == 'a') {
         // Abbruch, alles weiß
         for (int i = 1; i <= 10; i = i + 3) {
-          Umwandlung("wei��", i);
+          Umwandlung("weiss", i);
           DmxSimple.write(i, r);
           DmxSimple.write(i + 1, g);
           DmxSimple.write(i + 2, b);
